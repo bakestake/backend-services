@@ -1,0 +1,65 @@
+package handlers
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/ethereum/go-ethereum/accounts/abi/bind"
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/gin-gonic/gin"
+
+	Getter "endpoints/getter_artifact"
+)
+
+func GetCurrentAprHandler() gin.HandlerFunc{
+
+	return func(c *gin.Context) {
+
+		var networks = GetNetworksArray();
+
+		var aprs [len(networks)]string;
+
+		for i := 0; i < len(networks); i++{
+
+			url, err := GetNetworkRpc(networks[i]);
+
+			if err != nil {
+				fmt.Println("error getting RPC for chain : ", err.Error())
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting RPC for chain"})
+				return
+			}
+
+			client, err1 := ethclient.Dial(url);
+
+			if err1 != nil {
+				fmt.Println("error creating client for chain : ", err1.Error())
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating client for chain"})
+				return
+			}
+
+			contractAddress := common.HexToAddress("0x9e014aAE147D85d5764641e773dE9C29aC0141e9")
+			instance, err2 := Getter.NewArtifacts(contractAddress, client)
+
+			if err2 != nil {
+				fmt.Println("error creating contract instance : ", err2.Error())
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating contract instance"})
+				return
+			}
+
+			apr, err3 := instance.GetCurrentApr(&bind.CallOpts{})
+
+			if err3 != nil {
+				fmt.Println("error getting response from contract : ", err3.Error())
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
+				return
+			}else{
+				aprs[i] = apr.String()
+			}
+		}
+
+		c.JSON(http.StatusOK, gin.H{"aprs": aprs})
+
+	}
+
+}

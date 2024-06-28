@@ -1,0 +1,19 @@
+{
+  "name": "wormholequeries",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "tsc && node lib/scripts/ccq.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@wormhole-foundation/wormhole-query-sdk": "^0.0.12",
+    "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.1"
+  }
+}

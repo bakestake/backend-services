@@ -54,7 +54,7 @@ func GetGlobalStakedBudsHandler() gin.HandlerFunc{
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
 				return
 			}else{
-				globalStakedBuds += int(buds.Int64());
+				globalStakedBuds += int(buds.Int64()/1e18);
 			}
 		}
 

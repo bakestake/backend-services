@@ -18,6 +18,9 @@ func main() {
 	router := gin.Default()
 
 	router.GET("/getAPR", handlers.GetCurrentAprHandler())
+	router.GET("/getGlobalLiq", handlers.GetGlobalStakedBudsHandler())
+	router.GET("/getLocalLiq", handlers.GetLocalStakedBuds())
+	router.GET("/getStakersCount", handlers.GetNumberOfStakers())
 
 	// Run the http server
 	if err := router.Run(":8080"); err != nil {

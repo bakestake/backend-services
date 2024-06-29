@@ -4,8 +4,6 @@ import {
   PerChainQueryRequest,
   QueryProxyQueryResponse,
   QueryRequest,
-  QueryResponse,
-  signaturesToEvmStruct,
 } from "@wormhole-foundation/wormhole-query-sdk";
 import axios from "axios";
 import { getProviderURLs } from "./getProviderUrl";
@@ -13,88 +11,101 @@ import dotenv from "dotenv";
 import { ethers } from "ethers";
 import { ABI } from "../artifacts/StateUpdate";
 
-dotenv.config({path:"../../.env"});
+dotenv.config({path: "../.env"});
 
-const CCQ = async (curNetwork : string) => {
+const CCQ = async (curNetwork: string) => {
   try {
     const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
     const selector = "0x4269e94c";
     const chains = [
-      {chains : "fuji", chainId : 6, rpc: getProviderURLs("fuji")}, 
-      {chains : "arbSepolia", chainId : 10003, rpc: getProviderURLs("arbSepolia")}, 
-      {chains : "amoy", chainId : 10007, rpc: getProviderURLs("amoy")}, 
-      {chains : "bscTestnet", chainId : 4, rpc: getProviderURLs("bscTestnet")}
+      { chains: "fuji", chainId: 6, rpc: getProviderURLs("fuji") },
+      { chains: "arbSepolia", chainId: 10003, rpc: getProviderURLs("arbSepolia") },
+      { chains: "amoy", chainId: 10007, rpc: getProviderURLs("amoy") },
+      { chains: "bscTestnet", chainId: 4, rpc: getProviderURLs("bscTestnet") },
+      // { chains: "beraTestnet", chainId: 39, rpc: getProviderURLs("beraTestnet") },
+      // { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") },
+      // { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
     ];
 
-    // First step is getting responses from all chains
+    console.log(process.env.RPC_URL_FUJI)
 
-    console.log("Eth calls and block number calls getting recorded")
+    console.log("Eth calls and block number calls getting recorded");
 
     const responses = await Promise.all(
-      chains.map(({ rpc }) =>
+      chains.map(({ rpc, chainId }) =>
         rpc
-          ? axios.post(rpc, [
-              {
-                jsonrpc: "2.0",
-                id: 1,
-                method: "eth_getBlockByNumber",
-                params: ["latest", false],
-              },
-              {
-                jsonrpc: "2.0",
-                id: 2,
-                method: "eth_call",
-                params: [{ to: contractAddress, data: selector }, "latest"],
-              },
-            ])
-          : Promise.reject(),
+          ? axios
+              .post(rpc, [
+                {
+                  jsonrpc: "2.0",
+                  id: 1,
+                  method: "eth_getBlockByNumber",
+                  params: ["latest", false],
+                },
+                {
+                  jsonrpc: "2.0",
+                  id: 2,
+                  method: "eth_call",
+                  params: [{ to: contractAddress, data: selector }, "latest"],
+                },
+              ])
+              .catch((error) => {
+                console.error(`Error fetching data for rpc: ${rpc}`, error);
+                return null;
+              })
+          : Promise.reject(new Error(`RPC URL is undefined for chain ${chainId}`)),
       ),
     );
 
-    // second step is construct per chain query request
-
-    console.log("preping eth call data")
+    console.log("Preparing eth call data");
 
     const callData: EthCallData = {
       to: contractAddress,
       data: selector,
-    }; 
+    };
 
-    console.log("Preping queries for all chains")
+    console.log("Preparing queries for all chains");
 
-    let perChainQueries = chains.map( ({chainId}, idx) =>
-        new PerChainQueryRequest(
-          chainId,
-          new EthCallQueryRequest(responses[idx]?.data?.[0]?.result?.number, [callData])
-        ),
-
-    );
+    let perChainQueries = chains.map(({ chainId }, idx) => {
+      if (!responses[idx] || !responses[idx]?.data) {
+        console.error(`no response data for chain ID: ${chainId}`);
+        throw new Error(`no response data for chain ID: ${chainId}`);
+      }
+      return new PerChainQueryRequest(
+        chainId,
+        new EthCallQueryRequest(responses[idx]?.data?.[0]?.result?.number, [callData]),
+      );
+    });
 
     const nonce = 2;
     const request = new QueryRequest(nonce, perChainQueries);
     const serialized = request.serialize();
 
-    console.log("querying cross chain")
+    console.log("Querying cross chain");
 
-    const response = await axios.put<QueryProxyQueryResponse>(
-      "https://testnet.query.wormhole.com/v1/query",
-      {
-        bytes: Buffer.from(serialized).toString("hex"),
-      },
-      { headers: { "X-API-Key": process.env.WORMHOLE_API_KEY} },
-    );
+    const response = await axios
+      .put<QueryProxyQueryResponse>(
+        "https://testnet.query.wormhole.com/v1/query",
+        {
+          bytes: Buffer.from(serialized).toString("hex"),
+        },
+        { headers: { "X-API-Key": process.env.WORMHOLE_API_KEY } },
+      )
+      .catch((error) => {
+        console.error("error querying cross chain", error);
+        throw error;
+      });
 
-    console.log("broadcasting to chain")
+    console.log("broadcasting to chain");
 
-    
     const contract = new ethers.Contract(
-      contractAddress, 
-      ABI, 
+      contractAddress,
+      ABI,
       new ethers.Wallet(
-        process.env.PRIVATE_KEY || "", 
-        new ethers.JsonRpcProvider(getProviderURLs(curNetwork))
-      ) 
-    )
+        process.env.PRIVATE_KEY || "",
+        new ethers.JsonRpcProvider(getProviderURLs(curNetwork)),
+      ),
+    );
 
     const tx = await contract.updateState(
       `0x${response.data.bytes}`,
@@ -106,10 +117,10 @@ const CCQ = async (curNetwork : string) => {
       })),
     );
 
-    await tx.wait()
-
-  }catch(err){
-    console.log(err);
+    await tx.wait();
+  } catch (Error) {
+    console.error("an error occurred during the cross-chain query process", Error);
   }
-}
+};
 
+export default CCQ;

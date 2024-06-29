@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProviderURLs = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "../../.env" });
+dotenv_1.default.config({ path: "../.env" });
 const getProviderURLs = (networkName) => {
     switch (networkName) {
         case "polygon":
@@ -28,6 +28,8 @@ const getProviderURLs = (networkName) => {
             return process.env.RPC_URL_BERA;
         case "baseSepolia":
             return process.env.RPC_URL_BASE_SEPOLIA;
+        case "coreTestnet":
+            return process.env.RPC_URL_CORETESTNET;
     }
 };
 exports.getProviderURLs = getProviderURLs;

@@ -1,5 +1,5 @@
 import dotenv from "dotenv"
-dotenv.config({path:"../../.env"});
+dotenv.config({path: "../.env"});
 
 export const getProviderURLs = (networkName: string) => {
   switch (networkName) {
@@ -23,5 +23,7 @@ export const getProviderURLs = (networkName: string) => {
       return process.env.RPC_URL_BERA;
     case "baseSepolia":
       return process.env.RPC_URL_BASE_SEPOLIA;
+    case "coreTestnet":
+      return process.env.RPC_URL_CORETESTNET;
   }
 };

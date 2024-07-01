@@ -12,9 +12,24 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, API-KEY')
+  next()
+})
+
 app.get("/", cors(), async (req, res) => {
   res.send("wormhole service");
 });
+
+app.use((req, res, next) => {
+  const apiKey = req.get('API-KEY')
+  if (!apiKey || apiKey !== process.env.API_KEY) {
+    res.status(401).json({error: 'unauthorised'})
+  } else {
+    next()
+  }
+})
 
 app.get("/updateGlobalLiquidity", cors(), async (req, res) => {
   try{
@@ -30,7 +45,7 @@ app.get("/updateGlobalLiquidity", cors(), async (req, res) => {
   }
 });
 
-app.post("/updatePvpGlobalState/:network", cors(), async (req, res) => {
+app.get("/updatePvpGlobalState/:network", cors(), async (req, res) => {
   /// call pvp handler 
   try{
     console.log(`Querying on ${req.params.network} ....`);

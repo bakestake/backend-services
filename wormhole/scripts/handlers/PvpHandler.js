@@ -64,7 +64,11 @@ const PVP = (curNetwork) => __awaiter(void 0, void 0, void 0, function* () {
                 console.error(`Error fetching data for rpc: ${rpc}`, error);
                 return null;
             })
-            : Promise.reject(new Error(`RPC URL is undefined for chain ${chainId}`))));
+            :
+                Promise.reject(new Error(`RPC URL is undefined for chain ${chainId}`))));
+        if (responses == null) {
+            throw new Error("Failed to make Eth calls");
+        }
         console.log("Preparing eth call data");
         const callData = {
             to: contractAddress,
@@ -86,11 +90,21 @@ const PVP = (curNetwork) => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield axios_1.default
             .put("https://testnet.query.wormhole.com/v1/query", {
             bytes: Buffer.from(serialized).toString("hex"),
-        }, { headers: { "X-API-Key": process.env.WORMHOLE_API_KEY } })
-            .catch((error) => {
-            console.error("error querying cross chain", error);
-            throw error;
-        });
+        }, { headers: { "X-API-Key": process.env.WORMHOLE_API_KEY } });
+        if (response == null) {
+            throw new Error("error querying cross chain");
+        }
+        const bytes = `0x${response.data.bytes}`;
+        const signatures = response.data.signatures.map((s) => ({
+            r: `0x${s.substring(0, 64)}`,
+            s: `0x${s.substring(64, 128)}`,
+            v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
+            guardianIndex: `0x${s.substring(130, 132)}`,
+        }));
+        return {
+            "bytes": bytes,
+            "sigs": signatures
+        };
     }
     catch (err) {
         console.error("an error occurred during the cross-chain query process", err);

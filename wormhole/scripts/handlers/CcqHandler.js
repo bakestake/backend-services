@@ -16,10 +16,8 @@ const wormhole_query_sdk_1 = require("@wormhole-foundation/wormhole-query-sdk");
 const axios_1 = __importDefault(require("axios"));
 const getProviderUrl_1 = require("./getProviderUrl");
 const dotenv_1 = __importDefault(require("dotenv"));
-const ethers_1 = require("ethers");
-const StateUpdate_1 = require("../artifacts/StateUpdate");
 dotenv_1.default.config({ path: "../.env" });
-const CCQ = (curNetwork) => __awaiter(void 0, void 0, void 0, function* () {
+const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
         const selector = "0x4269e94c";
@@ -81,15 +79,17 @@ const CCQ = (curNetwork) => __awaiter(void 0, void 0, void 0, function* () {
             console.error("error querying cross chain", error);
             throw error;
         });
-        console.log("broadcasting to chain");
-        const contract = new ethers_1.ethers.Contract(contractAddress, StateUpdate_1.ABI, new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers_1.ethers.JsonRpcProvider((0, getProviderUrl_1.getProviderURLs)(curNetwork))));
-        const tx = yield contract.updateState(`0x${response.data.bytes}`, response.data.signatures.map((s) => ({
+        const bytes = `0x${response.data.bytes}`;
+        const signatures = response.data.signatures.map((s) => ({
             r: `0x${s.substring(0, 64)}`,
             s: `0x${s.substring(64, 128)}`,
             v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
             guardianIndex: `0x${s.substring(130, 132)}`,
-        })));
-        yield tx.wait();
+        }));
+        return {
+            "bytes": bytes,
+            "sigs": signatures
+        };
     }
     catch (Error) {
         console.error("an error occurred during the cross-chain query process", Error);

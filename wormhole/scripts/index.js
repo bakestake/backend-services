@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const CcqHandler_1 = __importDefault(require("./handlers/CcqHandler"));
+const PvpHandler_1 = __importDefault(require("./handlers/PvpHandler"));
 const app = (0, express_1.default)();
 var corsOptions = {
     origin: "*",
@@ -24,22 +25,27 @@ app.use((0, cors_1.default)(corsOptions));
 app.get("/", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("wormhole service");
 }));
-app.post("/updateGlobalLiquidity/:network", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/updateGlobalLiquidity", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log(`updating liquidity on ${req.params.network} ....`);
-        yield (0, CcqHandler_1.default)(req.params.network);
-        console.log(`updated liquidity on ${req.params.network}.`);
+        console.log(`Querying across the network`);
+        const response = yield (0, CcqHandler_1.default)();
+        console.log(`Queried all networks.`);
         res.status(200);
-        res.json(`updated liquidity on ${req.params.network}.`);
+        res.json(response);
     }
     catch (error) {
         console.log("Error updating global liquidity", error);
-        res.status(500).json({ error: `failed to update liquiidty on ${req.params.network}` });
+        res.status(500).json({ error: `failed to perform CCQ` });
     }
 }));
 app.post("/updatePvpGlobalState/:network", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     /// call pvp handler 
     try {
+        console.log(`updating liquidity on ${req.params.network} ....`);
+        const response = yield (0, PvpHandler_1.default)(req.params.network);
+        console.log(`updated liquidity on ${req.params.network}.`);
+        res.status(200);
+        res.json(response);
     }
     catch (error) {
         console.log("Error updating pvp global status", error);

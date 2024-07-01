@@ -9,23 +9,43 @@ import axios from "axios";
 import { getProviderURLs } from "./getProviderUrl";
 import dotenv from "dotenv";
 import { ethers } from "ethers";
-import { ABI } from "../artifacts/StateUpdate";
+import { ABI } from "../artifacts/Escrow";
 
 dotenv.config({path: "../.env"});
+
+type chainConf = {
+  chains:string,
+  chainId:number,
+  rpc:string
+}
+
+const getChainConf = async (chain:string) => {
+  switch (chain) {
+    case "fuji":
+      return { chains: "fuji", chainId: 6, rpc: getProviderURLs("fuji") || "" };
+    case "arbSepolia":
+     return { chains: "arbSepolia", chainId: 10003, rpc: getProviderURLs("arbSepolia") || "" };
+    case "amoy":
+      return { chains: "amoy", chainId: 10007, rpc: getProviderURLs("amoy") || "" };
+    case "bscTestnet":
+      return { chains: "bscTestnet", chainId: 4, rpc: getProviderURLs("bscTestnet") || "" };
+    case 'beraTestnet':
+      return { chains: "beraTestnet", chainId: 39, rpc: getProviderURLs("beraTestnet") || "" }
+    case 'coreTestnet':
+      return  { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") || "" }
+    case 'baseSepolia':
+      return { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") || "" }
+    default:
+      throw new Error("Not configuered");
+  }
+}
 
 const PVP = async (curNetwork: string) => {
   try {
     const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
-    const selector = "0x4269e94c";
-    const chains = [
-      { chains: "fuji", chainId: 6, rpc: getProviderURLs("fuji") },
-      { chains: "arbSepolia", chainId: 10003, rpc: getProviderURLs("arbSepolia") },
-      { chains: "amoy", chainId: 10007, rpc: getProviderURLs("amoy") },
-      { chains: "bscTestnet", chainId: 4, rpc: getProviderURLs("bscTestnet") },
-      // { chains: "beraTestnet", chainId: 39, rpc: getProviderURLs("beraTestnet") },
-      // { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") },
-      // { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
-    ];
+    const selector = "0x0ea901d2";
+    const chain : chainConf = await getChainConf(curNetwork);
+    const chains = [chain];
 
     console.log("Eth calls and block number calls getting recorded");
 
@@ -94,28 +114,6 @@ const PVP = async (curNetwork: string) => {
         throw error;
       });
 
-    console.log("broadcasting to chain");
-
-    const contract = new ethers.Contract(
-      contractAddress,
-      ABI,
-      new ethers.Wallet(
-        process.env.PRIVATE_KEY || "",
-        new ethers.JsonRpcProvider(getProviderURLs(curNetwork)),
-      ),
-    );
-
-    const tx = await contract.updateState(
-      `0x${response.data.bytes}`,
-      response.data.signatures.map((s) => ({
-        r: `0x${s.substring(0, 64)}`,
-        s: `0x${s.substring(64, 128)}`,
-        v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
-        guardianIndex: `0x${s.substring(130, 132)}`,
-      })),
-    );
-
-    await tx.wait();
   } catch (err) {
     console.error("an error occurred during the cross-chain query process", err);
   }

@@ -13,7 +13,7 @@ import { ABI } from "../artifacts/StateUpdate";
 
 dotenv.config({path: "../.env"});
 
-const CCQ = async (curNetwork: string) => {
+const CCQ = async () => {
   try {
     const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
     const selector = "0x4269e94c";
@@ -96,28 +96,21 @@ const CCQ = async (curNetwork: string) => {
         throw error;
       });
 
-    console.log("broadcasting to chain");
 
-    const contract = new ethers.Contract(
-      contractAddress,
-      ABI,
-      new ethers.Wallet(
-        process.env.PRIVATE_KEY || "",
-        new ethers.JsonRpcProvider(getProviderURLs(curNetwork)),
-      ),
-    );
+    const bytes = `0x${response.data.bytes}`
 
-    const tx = await contract.updateState(
-      `0x${response.data.bytes}`,
-      response.data.signatures.map((s) => ({
-        r: `0x${s.substring(0, 64)}`,
-        s: `0x${s.substring(64, 128)}`,
-        v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
-        guardianIndex: `0x${s.substring(130, 132)}`,
-      })),
-    );
+    const signatures = response.data.signatures.map((s) => ({
+      r: `0x${s.substring(0, 64)}`,
+      s: `0x${s.substring(64, 128)}`,
+      v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
+      guardianIndex: `0x${s.substring(130, 132)}`,
+    }))
 
-    await tx.wait();
+    return {
+      "bytes" : bytes,
+      "sigs" : signatures
+    }
+
   } catch (Error) {
     console.error("an error occurred during the cross-chain query process", Error);
   }

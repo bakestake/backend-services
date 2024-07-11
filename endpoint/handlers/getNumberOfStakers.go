@@ -38,7 +38,7 @@ func GetNumberOfStakers() gin.HandlerFunc{
 				return
 			}
 
-			contractAddress := common.HexToAddress("0x9e014aAE147D85d5764641e773dE9C29aC0141e9")
+			contractAddress := common.HexToAddress("0x26705aD938791e61Aa64a2a9D808378805aec819")
 			instance, err2 := Getter.NewArtifacts(contractAddress, client)
 
 			if err2 != nil {

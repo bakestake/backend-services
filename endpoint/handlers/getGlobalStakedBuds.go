@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"math/big"
 	"net/http"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -18,7 +19,7 @@ func GetGlobalStakedBudsHandler() gin.HandlerFunc{
 
 		var networks = GetNetworksArray();
 
-		var globalStakedBuds = 0;
+		var globalStakedBuds = big.NewInt(0);
 
 		for i := 0; i < len(networks); i++{
 
@@ -38,7 +39,7 @@ func GetGlobalStakedBudsHandler() gin.HandlerFunc{
 				return
 			}
 
-			contractAddress := common.HexToAddress("0x9e014aAE147D85d5764641e773dE9C29aC0141e9")
+			contractAddress := common.HexToAddress("0x26705aD938791e61Aa64a2a9D808378805aec819")
 			instance, err2 := Getter.NewArtifacts(contractAddress, client)
 
 			if err2 != nil {
@@ -54,11 +55,11 @@ func GetGlobalStakedBudsHandler() gin.HandlerFunc{
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
 				return
 			}else{
-				globalStakedBuds += int(buds.Int64()/1e18);
+				globalStakedBuds.Add(globalStakedBuds, buds)
 			}
 		}
 
-		c.JSON(http.StatusOK, gin.H{"global_staked_buds": globalStakedBuds})
+		c.JSON(http.StatusOK, gin.H{"global_staked_buds": globalStakedBuds.Div(globalStakedBuds, big.NewInt(1000000000000000))})
 
 	}
 

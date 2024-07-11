@@ -60,5 +60,4 @@ app.get("/updatePvpGlobalState/:network", cors(), async (req, res) => {
   }
 });
 
-
 export default app;

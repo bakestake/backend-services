@@ -15,7 +15,7 @@ dotenv.config({path: "../.env"});
 
 const CCQ = async () => {
   try {
-    const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
+    const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
     const selector = "0x4269e94c";
     const chains = [
       { chains: "fuji", chainId: 6, rpc: getProviderURLs("fuji") },

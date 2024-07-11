@@ -42,7 +42,7 @@ const getChainConf = async (chain:string) => {
 
 const PVP = async (curNetwork: string) => {
   try {
-    const contractAddress = "0x9e014aAE147D85d5764641e773dE9C29aC0141e9";
+    const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
     const selector = "0x0ea901d2";
     const chain : chainConf = await getChainConf(curNetwork);
     const chains = [chain];

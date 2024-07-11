@@ -2,57 +2,45 @@ version: "3.8"
 
 services:
 
-  endpoint_go:
-    container_name: endpoint_go
-    build: ./endpoint-go
+  endpoints:
+    container_name: endpoint
+    build: ./endpoint
     ports:
       - 8000:8080
     volumes:
-      - ./.env:/app/.env
+      - ./.env:/app/endpoint/.env
     restart: always
+    depends_on:
+      - postgress
     networks: 
      - bakeland
-
-  # auth:
-  #   container_name: auth
-  #   build: ./auth
-  #   ports:
-  #     - 7000:8080
-  #   volumes:
-  #     - ./.env:/app/.env
-  #   restart: always
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - bakeland
-
-  # postgres:
-  #   container_name: postgres
-  #   image: postgres
-  #   restart: always
-  #   ports:
-  #    - 5000:5432
-  #   volumes:
-  #     - ./postgres/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
-  #   environment:
-  #     - POSTGRES_USER
-  #     - POSTGRES_PASSWORD
-  #     - POSTGRES_DB
-  #   networks:
-  #     - travlrid
 
   wormhole:
     container_name: wormhole
     build: ./wormhole
     ports:
-      - 3001:3000
+      - 3000:3001
     volumes:
-      - ./minter/src:/usr/src/app/src
-      - ./.env:/usr/src/app/.env
+      - ./env/:/app/wormhole/.env
     restart: always
+    networks: 
+     - bakeland
+  
+  postgress:
+    container_name: postgress
+    image: postgres
+    restart: always
+    ports:
+     - 5000:5432
+    volumes:
+      - ./postgress/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     networks:
       - bakeland
 
 networks:
-    bakeland:
-      driver: bridge
+  bakeland:
+    driver: bridge

@@ -186,5 +186,9 @@ func PrepareTransaction(publicKey common.Address, privateKey *ecdsa.PrivateKey) 
 }
 
 func GetNetworksArray() [5]string {
-    return [5]string{"amoy", "bscTestnet", "fuji", "arbSepolia", "beraTestnet"/*, "baseSepolia", "coreTestnet"*/}
+    return [5]string{"amoy", "bscTestnet", "fuji", "arbSepolia", "baseSepolia"/*, "beraTestnet","coreTestnet"*/}
+}
+
+func GetChainIds() [5] string{
+	return [5]string{"1","2","3","4","5"}
 }

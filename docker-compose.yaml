@@ -1,14 +1,13 @@
 version: "3.8"
 
 services:
-
   endpoints:
     container_name: endpoint
     build: ./endpoint
     ports:
-      - 8000:8080
+      - "8000:8080"
     volumes:
-      - ./.env:/app/endpoint/.env
+      - ./.env:/app/.env
     restart: always
     depends_on:
       - postgress
@@ -19,9 +18,9 @@ services:
     container_name: wormhole
     build: ./wormhole
     ports:
-      - 3000:3001
+      - "3000:3001"
     volumes:
-      - ./env/:/app/wormhole/.env
+      - ./.env:/usr/src/app/.env
     restart: always
     networks: 
      - bakeland
@@ -31,7 +30,7 @@ services:
     image: postgres
     restart: always
     ports:
-     - 5000:5432
+      - "5000:5432"
     volumes:
       - ./postgress/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:

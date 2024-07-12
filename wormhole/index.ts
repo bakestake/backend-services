@@ -2,8 +2,11 @@ import express from "express"
 import cors from 'cors'
 import CCQ from "./handlers/CcqHandler";
 import PVP from "./handlers/PvpHandler";
+import dotenv from "dotenv";
 
 const app = express();
+
+dotenv.config()
 
 var corsOptions = {
   origin: "*",
@@ -24,8 +27,8 @@ app.get("/", cors(), async (req, res) => {
 
 app.use((req, res, next) => {
   const apiKey = req.get('API-KEY')
-  if (!apiKey || apiKey !== process.env.API_KEY) {
-    res.status(401).json({error: 'unauthorised'})
+  if (!apiKey || apiKey != process.env.API_KEY) {
+    res.status(401).json({error: 'unauthorised api key'})
   } else {
     next()
   }

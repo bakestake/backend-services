@@ -20,9 +20,9 @@ export const getProviderURLs = (networkName: string) => {
     case "arbSepolia":
       return process.env.RPC_URL_ARBSEPOLIA;
     case "beraTestnet":
-      return process.env.RPC_URL_BERA;
+      return process.env.RPC_URL_BERATESTNET;
     case "baseSepolia":
-      return process.env.RPC_URL_BASE_SEPOLIA;
+      return process.env.RPC_URL_BASESEPOLIA;
     case "coreTestnet":
       return process.env.RPC_URL_CORETESTNET;
   }

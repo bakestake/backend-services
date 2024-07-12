@@ -1,6 +1,21 @@
 version: "3.8"
 
 services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    restart: always
+    ports:
+      - "5000:5432"
+    volumes:
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    networks:
+      - bakeland
+
   endpoints:
     container_name: endpoint
     build: ./endpoint
@@ -18,27 +33,12 @@ services:
     container_name: wormhole
     build: ./wormhole
     ports:
-      - "3000:3001"
+      - "3000:3000"
     volumes:
       - ./.env:/usr/src/app/.env
     restart: always
     networks: 
      - bakeland
-  
-  postgres:
-    container_name: postgres
-    image: postgres
-    restart: always
-    ports:
-      - "5000:5432"
-    volumes:
-      - ./postgres/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
-    environment:
-      - POSTGRES_USER
-      - POSTGRES_PASSWORD
-      - POSTGRES_DB
-    networks:
-      - bakeland
 
 networks:
   bakeland:

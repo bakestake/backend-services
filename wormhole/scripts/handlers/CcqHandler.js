@@ -16,7 +16,7 @@ const wormhole_query_sdk_1 = require("@wormhole-foundation/wormhole-query-sdk");
 const axios_1 = __importDefault(require("axios"));
 const getProviderUrl_1 = require("./getProviderUrl");
 const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config({ path: "../.env" });
+dotenv_1.default.config({ path: "../../.env" });
 const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
@@ -28,7 +28,7 @@ const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
             { chains: "bscTestnet", chainId: 4, rpc: (0, getProviderUrl_1.getProviderURLs)("bscTestnet") },
             // { chains: "beraTestnet", chainId: 39, rpc: getProviderURLs("beraTestnet") },
             // { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") },
-            // { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
+            { chains: "baseSepolia", chainId: 10004, rpc: (0, getProviderUrl_1.getProviderURLs)("baseSepolia") },
         ];
         console.log(process.env.RPC_URL_FUJI);
         console.log("Eth calls and block number calls getting recorded");

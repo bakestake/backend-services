@@ -14,17 +14,15 @@ import (
 )
 
 type CCTX_Payload struct {
-	budsAmount *big.Int `json:"budsAmount"`
-	tokenID *big.Int `json:"tokenId"`
-	address common.Address `json:user`
-	destEid uint32 `json:eid`
+	BudsAmount string       `json:"budsAmount"`
+	TokenID    string       `json:"tokenId"`
+	Address    string       `json:"userAddress"`
+	DestEid    uint32       `json:"destEid"`
 }
 
-func GetCctxFees() gin.HandlerFunc{
-
+func GetCctxFees() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
-		var payload CCTX_Payload;
+		var payload CCTX_Payload
 
 		network := c.Param("networkName")
 
@@ -34,42 +32,49 @@ func GetCctxFees() gin.HandlerFunc{
 			return
 		}
 
-		url, err := GetNetworkRpc(network);
-
+		url, err := GetNetworkRpc(network)
 		if err != nil {
-			fmt.Println("error getting RPC for chain : ", err.Error())
+			fmt.Println("error getting RPC for chain:", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting RPC for chain"})
 			return
 		}
 
-		client, err1 := ethclient.Dial(url);
-
-		if err1 != nil {
-			fmt.Println("error creating client for chain : ", err1.Error())
+		client, err := ethclient.Dial(url)
+		if err != nil {
+			fmt.Println("error creating client for chain:", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating client for chain"})
 			return
 		}
 
 		contractAddress := common.HexToAddress("0x26705aD938791e61Aa64a2a9D808378805aec819")
-		instance, err2 := CC.NewArtifacts(contractAddress, client)
-
-		if err2 != nil {
-			fmt.Println("error creating contract instance : ", err2.Error())
+		instance, err := CC.NewArtifacts(contractAddress, client)
+		if err != nil {
+			fmt.Println("error creating contract instance:", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating contract instance"})
 			return
 		}
 
+		budsAmount := new(big.Int)
+		tokenID := new(big.Int)
 
-		res, err3 := instance.GetCctxFees(&bind.CallOpts{}, payload.destEid, payload.budsAmount, payload.tokenID, payload.address)
+		budsAmount.SetString(payload.BudsAmount, 10)
+		tokenID.SetString(payload.TokenID, 10)
+		address := common.HexToAddress(payload.Address)
 
-		if err3 != nil {
-			fmt.Println("error getting response from contract : ", err3.Error())
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
+		fmt.Println("Calling GetCctxFees with parameters:")
+		fmt.Printf("DestEid: %d, BudsAmount: %s, TokenID: %s, Address: %s\n", payload.DestEid, budsAmount.String(), tokenID.String(), address.Hex())
+
+		opts := &bind.CallOpts{
+			Pending:     true,
+		}
+
+		res, err := instance.GetCctxFees(opts, payload.DestEid, budsAmount, tokenID, address)
+		if err != nil {
+			fmt.Println("error getting response from contract:", err.Error())
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting response from contract", "details": err.Error()})
 			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{"cctx_fees": res})
-
 	}
-
 }

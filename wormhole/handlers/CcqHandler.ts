@@ -11,7 +11,7 @@ import dotenv from "dotenv";
 import { ethers } from "ethers";
 import { ABI } from "../artifacts/StateUpdate";
 
-dotenv.config({path: "../.env"});
+dotenv.config({path: "../../.env"});
 
 const CCQ = async () => {
   try {
@@ -24,7 +24,7 @@ const CCQ = async () => {
       { chains: "bscTestnet", chainId: 4, rpc: getProviderURLs("bscTestnet") },
       // { chains: "beraTestnet", chainId: 39, rpc: getProviderURLs("beraTestnet") },
       // { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") },
-      // { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
+      { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
     ];
 
     console.log(process.env.RPC_URL_FUJI)

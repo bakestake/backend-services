@@ -12,28 +12,26 @@ import (
 	Getter "endpoints/getter_artifact"
 )
 
-func GetLocalStakedBuds() gin.HandlerFunc{
-
+func GetLocalStakedBuds() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var networks = GetNetworksArray()
 
-		var networks = GetNetworksArray();
+		// Use a map to store chain names as keys and local staked buds as values
+		localStakedBuds := make(map[string]string)
 
-		var local_staked_buds [len(networks)]string;
-
-		for i := 0; i < len(networks); i++{
-
-			url, err := GetNetworkRpc(networks[i]);
+		for _, network := range networks {
+			url, err := GetNetworkRpc(network)
 
 			if err != nil {
-				fmt.Println("error getting RPC for chain : ", err.Error())
+				fmt.Println("error getting RPC for chain:", err.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting RPC for chain"})
 				return
 			}
 
-			client, err1 := ethclient.Dial(url);
+			client, err1 := ethclient.Dial(url)
 
 			if err1 != nil {
-				fmt.Println("error creating client for chain : ", err1.Error())
+				fmt.Println("error creating client for chain:", err1.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating client for chain"})
 				return
 			}
@@ -42,7 +40,7 @@ func GetLocalStakedBuds() gin.HandlerFunc{
 			instance, err2 := Getter.NewArtifacts(contractAddress, client)
 
 			if err2 != nil {
-				fmt.Println("error creating contract instance : ", err2.Error())
+				fmt.Println("error creating contract instance:", err2.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating contract instance"})
 				return
 			}
@@ -50,16 +48,14 @@ func GetLocalStakedBuds() gin.HandlerFunc{
 			buds, err3 := instance.GetlocalStakedBuds(&bind.CallOpts{})
 
 			if err3 != nil {
-				fmt.Println("error getting response from contract : ", err3.Error())
-				c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
+				fmt.Println("error getting response from contract:", err3.Error())
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting response from contract"})
 				return
-			}else{
-				local_staked_buds[i] = buds.String();
 			}
+
+			localStakedBuds[network] = buds.String()
 		}
 
-		c.JSON(http.StatusOK, gin.H{"local_staked_buds": local_staked_buds})
-
+		c.JSON(http.StatusOK, localStakedBuds)
 	}
-
 }

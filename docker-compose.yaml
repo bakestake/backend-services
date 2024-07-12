@@ -10,7 +10,7 @@ services:
       - ./.env:/app/.env
     restart: always
     depends_on:
-      - postgress
+      - postgres
     networks: 
      - bakeland
 
@@ -25,14 +25,14 @@ services:
     networks: 
      - bakeland
   
-  postgress:
-    container_name: postgress
+  postgres:
+    container_name: postgres
     image: postgres
     restart: always
     ports:
       - "5000:5432"
     volumes:
-      - ./postgress/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD

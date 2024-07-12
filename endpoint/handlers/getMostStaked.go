@@ -71,7 +71,7 @@ func GetMostStaked(db *sql.DB) gin.HandlerFunc {
 			}
 
 			updateQuery := `UPDATE daily_stats SET staked_buds = $1 WHERE chain_id = $2`
-			_, err = db.Exec(updateQuery, buds, i+1)
+			_, err = db.Exec(updateQuery, buds.Int64(), i+1)
 			if err != nil {
 				fmt.Println("Failed to update staked buds record:", err.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update staked buds record"})
@@ -79,6 +79,6 @@ func GetMostStaked(db *sql.DB) gin.HandlerFunc {
 			}
 		}
 
-		c.JSON(http.StatusOK, gin.H{"most_staked": maxChain})
+		c.JSON(http.StatusOK, gin.H{"most_staked": maxChain, "stakedAmount":maxDif})
 	}
 }

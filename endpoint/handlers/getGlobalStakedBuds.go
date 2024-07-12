@@ -59,7 +59,7 @@ func GetGlobalStakedBudsHandler() gin.HandlerFunc{
 			}
 		}
 
-		c.JSON(http.StatusOK, gin.H{"global_staked_buds": globalStakedBuds.Div(globalStakedBuds, big.NewInt(1000000000000000))})
+		c.JSON(http.StatusOK, gin.H{"global_staked_buds": globalStakedBuds.Div(globalStakedBuds, big.NewInt(1000000000000000000))})
 
 	}
 

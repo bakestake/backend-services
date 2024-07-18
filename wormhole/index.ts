@@ -28,6 +28,7 @@ app.get("/", cors(), async (req, res) => {
 app.use((req, res, next) => {
   const apiKey = req.get('API-KEY')
   if (!apiKey || apiKey != process.env.API_KEY) {
+    console.log(process.env.API_KEY)
     res.status(401).json({error: 'unauthorised. Incorrect API key'})
   } else {
     next()

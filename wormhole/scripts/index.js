@@ -16,7 +16,9 @@ const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const CcqHandler_1 = __importDefault(require("./handlers/CcqHandler"));
 const PvpHandler_1 = __importDefault(require("./handlers/PvpHandler"));
+const dotenv_1 = __importDefault(require("dotenv"));
 const app = (0, express_1.default)();
+dotenv_1.default.config();
 var corsOptions = {
     origin: "*",
     optionsSuccessStatus: 200,
@@ -24,7 +26,7 @@ var corsOptions = {
 app.use((0, cors_1.default)(corsOptions));
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, Content-Type, Accept, API-KEY');
+    res.header('Access-Control-Allow-Headers', 'API-KEY');
     next();
 });
 app.get("/", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -32,8 +34,9 @@ app.get("/", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void
 }));
 app.use((req, res, next) => {
     const apiKey = req.get('API-KEY');
-    if (!apiKey || apiKey !== process.env.API_KEY) {
-        res.status(401).json({ error: 'unauthorised' });
+    if (!apiKey || apiKey != process.env.API_KEY) {
+        console.log(process.env.API_KEY);
+        res.status(401).json({ error: 'unauthorised. Incorrect API key' });
     }
     else {
         next();

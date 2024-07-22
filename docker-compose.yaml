@@ -3,7 +3,7 @@ version: "3.3"
 services:
   postgres:
     container_name: postgres
-    image: postgres
+    build: ./postgres
     restart: always
     ports:
       - "5000:5432"
@@ -34,6 +34,17 @@ services:
     build: ./wormhole
     ports:
       - "3000:3000"
+    volumes:
+      - ./.env:/usr/src/app/.env
+    restart: always
+    networks: 
+     - bakeland
+
+  monitoring:
+    container_name: monitoring
+    build: ./monitoring
+    ports:
+      - "4000:4000"
     volumes:
       - ./.env:/usr/src/app/.env
     restart: always

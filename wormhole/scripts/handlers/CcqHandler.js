@@ -16,8 +16,9 @@ const wormhole_query_sdk_1 = require("@wormhole-foundation/wormhole-query-sdk");
 const axios_1 = __importDefault(require("axios"));
 const getProviderUrl_1 = require("./getProviderUrl");
 const dotenv_1 = __importDefault(require("dotenv"));
+const ethers_1 = require("ethers");
 dotenv_1.default.config({ path: "../../.env" });
-const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
+const CCQ = (chain) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
         const selector = "0x4269e94c";
@@ -79,6 +80,15 @@ const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
             console.error("error querying cross chain", error);
             throw error;
         });
+        const mock = new wormhole_query_sdk_1.QueryProxyMock({ 6: chains[0].rpc || "", 10003: chains[1].rpc || "", 10007: chains[2].rpc || "", 4: chains[3].rpc || "", 10004: chains[4].rpc || "" });
+        const mockData = yield mock.mock(request);
+        const mockQueryResponse = wormhole_query_sdk_1.QueryResponse.from(mockData.bytes);
+        let global = 0;
+        for (let i = 0; i < responses.length; i++) {
+            global += parseInt(mockQueryResponse.responses[i].response.results[0]);
+        }
+        const mockQueryResult = mockQueryResponse.responses[0].response.results[0];
+        console.log(`Mock Query Result: ${mockQueryResult} (${BigInt(mockQueryResult)})`);
         const bytes = `0x${response.data.bytes}`;
         const signatures = response.data.signatures.map((s) => ({
             r: `0x${s.substring(0, 64)}`,
@@ -86,10 +96,73 @@ const CCQ = () => __awaiter(void 0, void 0, void 0, function* () {
             v: `0x${(parseInt(s.substring(128, 130), 16) + 27).toString(16)}`,
             guardianIndex: `0x${s.substring(130, 132)}`,
         }));
-        return {
-            "bytes": bytes,
-            "sigs": signatures
-        };
+        console.log(global / 1e18, typeof (global));
+        let currentState = 0;
+        const contractInst = new ethers_1.ethers.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", [{
+                "inputs": [],
+                "name": "getGlobalStakedBuds",
+                "outputs": [
+                    {
+                        "internalType": "uint256",
+                        "name": "",
+                        "type": "uint256"
+                    }
+                ],
+                "stateMutability": "view",
+                "type": "function"
+            }], new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers_1.ethers.JsonRpcProvider((yield (0, getProviderUrl_1.getProviderURLs)(chain)) || "")));
+        currentState = yield contractInst.getGlobalStakedBuds();
+        const parsedState = parseInt(currentState.toString()) / 1e18;
+        global = global / 1e18;
+        console.log(parsedState, typeof (parsedState));
+        if (parsedState != global) {
+            console.log("State update needed");
+            const stateContractInst = new ethers_1.ethers.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", [{
+                    "inputs": [
+                        {
+                            "internalType": "bytes",
+                            "name": "response",
+                            "type": "bytes"
+                        },
+                        {
+                            "components": [
+                                {
+                                    "internalType": "bytes32",
+                                    "name": "r",
+                                    "type": "bytes32"
+                                },
+                                {
+                                    "internalType": "bytes32",
+                                    "name": "s",
+                                    "type": "bytes32"
+                                },
+                                {
+                                    "internalType": "uint8",
+                                    "name": "v",
+                                    "type": "uint8"
+                                },
+                                {
+                                    "internalType": "uint8",
+                                    "name": "guardianIndex",
+                                    "type": "uint8"
+                                }
+                            ],
+                            "internalType": "struct IWormhole.Signature[]",
+                            "name": "signatures",
+                            "type": "tuple[]"
+                        }
+                    ],
+                    "name": "updateState",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                }], new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers_1.ethers.JsonRpcProvider((0, getProviderUrl_1.getProviderURLs)(chain) || "")));
+            yield stateContractInst.updateState(bytes, signatures);
+            console.log("State updated");
+        }
+        else {
+            console.log("State update not needed");
+        }
     }
     catch (Error) {
         console.error("an error occurred during the cross-chain query process", Error);

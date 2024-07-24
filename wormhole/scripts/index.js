@@ -42,13 +42,13 @@ app.use((req, res, next) => {
         next();
     }
 });
-app.get("/updateGlobalLiquidity", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/updateGlobalLiquidity/:chain", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Querying across the network`);
-        const response = yield (0, CcqHandler_1.default)();
+        const response = yield (0, CcqHandler_1.default)(req.params.chain);
         console.log(`Queried all networks.`);
         res.status(200);
-        res.json(response);
+        res.json({});
     }
     catch (error) {
         console.log("Error updating global liquidity", error);

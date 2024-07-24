@@ -4,6 +4,9 @@ import {
   PerChainQueryRequest,
   QueryProxyQueryResponse,
   QueryRequest,
+  QueryProxyMock,
+  QueryResponse,
+  EthCallQueryResponse
 } from "@wormhole-foundation/wormhole-query-sdk";
 import axios from "axios";
 import { getProviderURLs } from "./getProviderUrl";
@@ -13,7 +16,7 @@ import { ABI } from "../artifacts/StateUpdate";
 
 dotenv.config({path: "../../.env"});
 
-const CCQ = async () => {
+const CCQ = async (chain : string) => {
   try {
     const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
     const selector = "0x4269e94c";
@@ -96,6 +99,22 @@ const CCQ = async () => {
         throw error;
       });
 
+    const mock = new QueryProxyMock({ 6: chains[0].rpc || "",  10003: chains[1].rpc || "", 10007: chains[2].rpc || "", 4: chains[3].rpc || "", 10004: chains[4].rpc || ""});
+    const mockData = await mock.mock(request);
+    const mockQueryResponse = QueryResponse.from(mockData.bytes);
+    let global = 0;
+
+    for(let i = 0; i < responses.length; i++){
+      global += parseInt((mockQueryResponse.responses[i].response as EthCallQueryResponse).results[0])
+    }
+
+    const mockQueryResult = (
+      mockQueryResponse.responses[0].response as EthCallQueryResponse
+    ).results[0];
+
+    console.log(
+      `Mock Query Result: ${mockQueryResult} (${BigInt(mockQueryResult)})`
+    );
 
     const bytes = `0x${response.data.bytes}`
 
@@ -106,10 +125,88 @@ const CCQ = async () => {
       guardianIndex: `0x${s.substring(130, 132)}`,
     }))
 
-    return {
-      "bytes" : bytes,
-      "sigs" : signatures
+    console.log(global/1e18, typeof(global))
+
+    let currentState = 0;
+
+    const contractInst = new ethers.Contract(
+      "0x26705ad938791e61aa64a2a9d808378805aec819", 
+      [{
+        "inputs": [],
+        "name": "getGlobalStakedBuds",
+        "outputs": [
+          {
+            "internalType": "uint256",
+            "name": "",
+            "type": "uint256"
+          }
+        ],
+        "stateMutability": "view",
+      "type": "function"
+      }],
+      new ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers.JsonRpcProvider(await getProviderURLs(chain) || ""))
+    )
+
+    currentState = await contractInst.getGlobalStakedBuds();
+
+    const parsedState = parseInt(currentState.toString())/1e18;
+    global = global/1e18
+
+    console.log(parsedState, typeof(parsedState))
+
+    if(parsedState != global){
+      console.log("State update needed");
+      const stateContractInst = new ethers.Contract(
+        "0x26705ad938791e61aa64a2a9d808378805aec819", 
+        [{
+          "inputs": [
+            {
+              "internalType": "bytes",
+              "name": "response",
+              "type": "bytes"
+            },
+            {
+              "components": [
+                {
+                  "internalType": "bytes32",
+                  "name": "r",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "bytes32",
+                  "name": "s",
+                  "type": "bytes32"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "v",
+                  "type": "uint8"
+                },
+                {
+                  "internalType": "uint8",
+                  "name": "guardianIndex",
+                  "type": "uint8"
+                }
+              ],
+              "internalType": "struct IWormhole.Signature[]",
+              "name": "signatures",
+              "type": "tuple[]"
+            }
+          ],
+          "name": "updateState",
+          "outputs": [],
+          "stateMutability": "nonpayable",
+          "type": "function"
+        }],
+        new ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers.JsonRpcProvider(getProviderURLs(chain) || ""))
+      )
+
+      await stateContractInst.updateState(bytes, signatures);
+      console.log("State updated");
+    }else{
+      console.log("State update not needed");
     }
+
 
   } catch (Error) {
     console.error("an error occurred during the cross-chain query process", Error);

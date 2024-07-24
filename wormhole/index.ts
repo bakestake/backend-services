@@ -35,14 +35,14 @@ app.use((req, res, next) => {
   }
 })
 
-app.get("/updateGlobalLiquidity", cors(), async (req, res) => {
+app.get("/updateGlobalLiquidity/:chain", cors(), async (req, res) => {
   try{
     console.log(`Querying across the network`);
-    const response = await CCQ();
+    const response = await CCQ(req.params.chain);
     console.log(`Queried all networks.`);
 
     res.status(200);
-    res.json(response);
+    res.json({})
   }catch(error){
     console.log("Error updating global liquidity", error)
    res.status(500).json({error: `failed to perform CCQ`})

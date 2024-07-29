@@ -82,6 +82,8 @@ func main() {
 	router.GET("/getEvents/:networkName/:event", handlers.GetEventConfirmation())
 	router.GET("/mostBaked", handlers.GetMostStaked(db))
 	router.GET("/mostRekt", handlers.GetMostRaided(db))
+	router.GET("/getUserStake/:network/:address", handlers.GetUserStake())
+	router.GET("/nextClaim/:network/:address", handlers.GetLastClaimed())
 
 
 	// Run the http server

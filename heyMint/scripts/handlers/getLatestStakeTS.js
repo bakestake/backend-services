@@ -23,12 +23,10 @@ const getLatestStakeTS = (chain, userAddress) => __awaiter(void 0, void 0, void 
         const wallet = new ethers_1.ethers.Wallet(process.env.PRIVATE_KEY || "", provider);
         const contractInst = new ethers_1.ethers.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", getterSetter_1.getterSetter, wallet);
         const stakes = yield contractInst.getUserStakes(userAddress);
-        let latestTS = BigInt(0);
-        for (let i = 0; i < stakes.length; i++) {
-            latestTS = BigInt(stakes[i].timeStamp) > latestTS ? BigInt(stakes[i].timeStamp) : latestTS;
+        if (stakes.length == 0) {
+            return 0;
         }
-        console.log(stakes[stakes.length - 1].timeStamp);
-        return Number(latestTS); // Convert BigInt to Number
+        return Number(stakes[stakes.length - 1].timeStamp); // Convert BigInt to Number
     }
     catch (error) {
         console.error('Error in getUserStake:', error);

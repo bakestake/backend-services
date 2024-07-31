@@ -149,31 +149,6 @@
   }
   ```
 
-### 13. Get User staked buds
-- **Endpoint:** `GET /getUserStake/:network/:address`
-- **Description:** Returns buds staked by user on particular chain"
-- **Parameters:**
-  - `network`: Chain name
-  - `address`: address of user
-- **Response:**
-  ```json
-  {
-    "userStake" : budsAmount
-  }
-  ```
-### 13. Get next claim timestamp
-- **Endpoint:** `GET /nextClaim/:network/:address`
-- **Description:** Returns timestamp for next buds claim for particular user on particular chain"
-- **Parameters:**
-  - `network`: Chain name
-  - `address`: address of user
-- **Response:**
-  ```json
-  {
-    "timestamp" : timestamp
-  }
-  ```
-
 ## Wormhole
 url : http://13.39.24.134:3000/
 ### 1. update liqduity
@@ -198,6 +173,46 @@ returns status as -
 Delivered [success]
 Failed || Blocked - [failed]
 Inflight - [Yet not received on destination chain]
+
+## Heymint 
+url - http://13.39.24.134:6000/
+
+### 1. Get User staked buds
+- **Endpoint:** `GET /getUserStake/:network/:address`
+- **Description:** Returns buds staked by user on particular chain"
+- **Parameters:**
+  - `network`: Chain name
+  - `address`: address of user
+- **Response:**
+  ```json
+  {
+    "userStake" : budsAmount
+  }
+  ```
+### 2. Get next claim timestamp
+- **Endpoint:** `GET /nextClaim/:network/:address`
+- **Description:** Returns timestamp for next buds claim for particular user on particular chain"
+- **Parameters:**
+  - `network`: Chain name
+  - `address`: address of user
+- **Response:**
+  ```json
+  {
+    "timestamp" : timestamp
+  }
+  ```
+### 3. Get next claim timestamp
+- **Endpoint:** `GET /getLatestStakeTs/:network/:address`
+- **Description:** Returns timestamp for latest stake"
+- **Parameters:**
+  - `network`: Chain name
+  - `address`: address of user
+- **Response:**
+  ```json
+  {
+    "timestamp" : timestamp
+  }
+  ```
 
 ## Valid chain names for passing in params and request body-
 1. amoy

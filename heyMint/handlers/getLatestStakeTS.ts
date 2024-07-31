@@ -19,15 +19,12 @@ export const getLatestStakeTS = async (chain: string, userAddress: string): Prom
     );
 
     const stakes = await contractInst.getUserStakes(userAddress);
-    let latestTS = BigInt(0);
 
-    for (let i = 0; i < stakes.length; i++) {
-      latestTS = BigInt(stakes[i].timeStamp) > latestTS ? BigInt(stakes[i].timeStamp) : latestTS;
+    if(stakes.length == 0){
+        return 0;
     }
 
-    console.log(stakes[stakes.length-1].timeStamp)
-
-    return Number(latestTS); // Convert BigInt to Number
+    return Number(stakes[stakes.length-1].timeStamp); // Convert BigInt to Number
   } catch (error) {
     console.error('Error in getUserStake:', error);
     return null; // or throw error if you want to handle it higher up

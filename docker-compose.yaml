@@ -51,6 +51,17 @@ services:
     networks: 
      - bakeland
 
+  heymint:
+    container_name: heymint
+    build: ./heyMint
+    ports:
+      - "6000:6000"
+    volumes:
+      - ./.env:/usr/src/app/.env
+    restart: always
+    networks: 
+     - bakeland
+
 networks:
   bakeland:
     driver: bridge

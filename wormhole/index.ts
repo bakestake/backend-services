@@ -45,7 +45,7 @@ app.get("/updateGlobalLiquidity/:chain", cors(), async (req, res) => {
     res.json({})
   }catch(error){
     console.log("Error updating global liquidity", error)
-   res.status(500).json({error: `failed to perform CCQ`})
+    res.status(500).json({error: `failed to perform CCQ`})
   }
 });
 

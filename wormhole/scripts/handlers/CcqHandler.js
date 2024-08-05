@@ -17,8 +17,22 @@ const axios_1 = __importDefault(require("axios"));
 const getProviderUrl_1 = require("./getProviderUrl");
 const dotenv_1 = __importDefault(require("dotenv"));
 const ethers_1 = require("ethers");
+const beraStateUpdate_1 = require("./beraStateUpdate");
 dotenv_1.default.config({ path: "../../.env" });
 const CCQ = (chain) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (chain == "beraTestnet") {
+            yield (0, beraStateUpdate_1.BeraStateUpdate)();
+        }
+        else {
+            yield stateUpdate(chain);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+const stateUpdate = (chain) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
         const selector = "0x4269e94c";

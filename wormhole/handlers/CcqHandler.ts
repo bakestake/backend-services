@@ -12,12 +12,25 @@ import axios from "axios";
 import { getProviderURLs } from "./getProviderUrl";
 import dotenv from "dotenv";
 import { ethers } from "ethers";
-import { ABI } from "../artifacts/StateUpdate";
+import { BeraStateUpdate } from "./beraStateUpdate";
 
 dotenv.config({path: "../../.env"});
 
 const CCQ = async (chain : string) => {
-  try {
+  try{
+    if(chain == "beraTestnet"){
+      await BeraStateUpdate();
+    }else{
+      await stateUpdate(chain);
+    }
+  }catch(error){
+    console.log(error);
+  }
+  
+};
+
+const stateUpdate = async(chain:string) =>{
+    try {
     const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
     const selector = "0x4269e94c";
     const chains = [
@@ -211,6 +224,6 @@ const CCQ = async (chain : string) => {
   } catch (Error) {
     console.error("an error occurred during the cross-chain query process", Error);
   }
-};
+}
 
 export default CCQ;

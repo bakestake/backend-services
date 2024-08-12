@@ -71,6 +71,8 @@ func main() {
 
 	router := gin.Default()
 
+	router.Use(enableCors())
+
 	router.GET("/getApr", handlers.GetCurrentAprHandler())
 	router.GET("/totalStakedBudsAcrossAllChains", handlers.GetGlobalStakedBudsHandler())
 	router.GET("/getLocalBudsCount", handlers.GetLocalStakedBuds())
@@ -91,4 +93,13 @@ func main() {
 		log.Fatal("Failed to start the server", err)
 	}
 
+}
+
+func enableCors() gin.HandlerFunc{
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin","*")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "GET")
+
+		c.Next();
+	}
 }

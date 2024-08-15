@@ -13,7 +13,7 @@ export const getLatestStakeTS = async (chain: string, userAddress: string): Prom
     const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || "", provider);
 
     const contractInst = new ethers.Contract(
-      "0x26705ad938791e61aa64a2a9d808378805aec819",
+      "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe",
       getterSetter,
       wallet
     );

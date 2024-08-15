@@ -45,7 +45,7 @@ const BeraStateUpdate = () => __awaiter(void 0, void 0, void 0, function* () {
                 jsonrpc: "2.0",
                 id: 2,
                 method: "eth_call",
-                params: [{ to: "0x26705aD938791e61Aa64a2a9D808378805aec819", data: "0x4269e94c" }, "latest"],
+                params: [{ to: "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", data: "0x4269e94c" }, "latest"],
             },
         ])
             .catch((error) => {

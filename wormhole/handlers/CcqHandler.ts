@@ -31,7 +31,7 @@ const CCQ = async (chain : string) => {
 
 const stateUpdate = async(chain:string) =>{
     try {
-    const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
+    const contractAddress = "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe";
     const selector = "0x4269e94c";
     const chains = [
       { chains: "fuji", chainId: 6, rpc: getProviderURLs("fuji") },
@@ -143,7 +143,7 @@ const stateUpdate = async(chain:string) =>{
     let currentState = 0;
 
     const contractInst = new ethers.Contract(
-      "0x26705ad938791e61aa64a2a9d808378805aec819", 
+      "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", 
       [{
         "inputs": [],
         "name": "getGlobalStakedBuds",
@@ -170,7 +170,7 @@ const stateUpdate = async(chain:string) =>{
     if(parsedState != global){
       console.log("State update needed");
       const stateContractInst = new ethers.Contract(
-        "0x26705ad938791e61aa64a2a9d808378805aec819", 
+        "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", 
         [{
           "inputs": [
             {

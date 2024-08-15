@@ -34,7 +34,7 @@ const CCQ = (chain) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const stateUpdate = (chain) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contractAddress = "0x26705aD938791e61Aa64a2a9D808378805aec819";
+        const contractAddress = "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe";
         const selector = "0x4269e94c";
         const chains = [
             { chains: "fuji", chainId: 6, rpc: (0, getProviderUrl_1.getProviderURLs)("fuji") },
@@ -112,7 +112,7 @@ const stateUpdate = (chain) => __awaiter(void 0, void 0, void 0, function* () {
         }));
         console.log(global / 1e18, typeof (global));
         let currentState = 0;
-        const contractInst = new ethers_1.ethers.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", [{
+        const contractInst = new ethers_1.ethers.Contract("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", [{
                 "inputs": [],
                 "name": "getGlobalStakedBuds",
                 "outputs": [
@@ -131,7 +131,7 @@ const stateUpdate = (chain) => __awaiter(void 0, void 0, void 0, function* () {
         console.log(parsedState, typeof (parsedState));
         if (parsedState != global) {
             console.log("State update needed");
-            const stateContractInst = new ethers_1.ethers.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", [{
+            const stateContractInst = new ethers_1.ethers.Contract("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", [{
                     "inputs": [
                         {
                             "internalType": "bytes",

@@ -69,7 +69,7 @@ func GetEventConfirmation() gin.HandlerFunc{
 			return
 		}
 		
-		contractAddress := common.HexToAddress("0x26705aD938791e61Aa64a2a9D808378805aec819")
+		contractAddress := common.HexToAddress("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe")
 
 		currentBlock, err := client.BlockNumber(c)
 

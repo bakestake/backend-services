@@ -21,7 +21,8 @@ func InitiateDBWithData(db *sql.DB) error {
 			(2, 'bscTestnet', 1500, 300),
 			(3, 'fuji', 450, 150),
 			(4, 'arbSepolia', 200, 350),
-			(5, 'baseSepolia', 750, 100);`,
+			(5, 'baseSepolia', 750, 100),
+			(6, 'beraTestnet', 700, 300);`,
 		`INSERT INTO user_data (user_address, user_name, buds_won, games_won) VALUES
 			('0x123abc...', 'Alice', 500, 10),
 			('0x456def...', 'Bob', 700, 15);`,
@@ -79,14 +80,13 @@ func main() {
 	router.GET("/getStakersCount", handlers.GetNumberOfStakers())
 	router.GET("/getRewards/:address", handlers.GetStakingRewardsForUserHandler())
 	router.GET("/getFees/:networkName", handlers.GetCctxFees())
+	router.GET("/getRaidFees/:networkName", handlers.GetRaidFees())
 	router.GET("/getBudsBalance/:networkName/:address")
 	router.GET("/getCurrentBlockNumber/:networkName", handlers.GetBlockNumber())
 	router.GET("/getEvents/:networkName/:event", handlers.GetEventConfirmation())
 	router.GET("/mostBaked", handlers.GetMostStaked(db))
 	router.GET("/mostRekt", handlers.GetMostRaided(db))
 	router.GET("/getUserStake/:network/:address", handlers.GetUserStake())
-	router.GET("/nextClaim/:network/:address", handlers.GetLastClaimed())
-
 
 	// Run the http server
 	if err := router.Run(":8080"); err != nil {

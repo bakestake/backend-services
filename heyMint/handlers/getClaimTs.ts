@@ -5,7 +5,7 @@ import {faucetABI} from "../artifacts/faucet"
 export const getClaimTS = async (chain : string, userAddress:string) =>{
     try{
         const contractInst = new ethers.Contract(
-            "0x26705ad938791e61aa64a2a9d808378805aec819", 
+            "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", 
             faucetABI,
             new ethers.Wallet(process.env.PRIVATE_KEY || "", new ethers.JsonRpcProvider(await getProviderURLs(chain) || ""))
         )

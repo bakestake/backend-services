@@ -18,7 +18,7 @@ const getProviderUrl_1 = require("./getProviderUrl");
 const faucet_1 = require("../artifacts/faucet");
 const getClaimTS = (chain, userAddress) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const contractInst = new ethers_1.default.Contract("0x26705ad938791e61aa64a2a9d808378805aec819", faucet_1.faucetABI, new ethers_1.default.Wallet(process.env.PRIVATE_KEY || "", new ethers_1.default.JsonRpcProvider((yield (0, getProviderUrl_1.getProviderURLs)(chain)) || "")));
+        const contractInst = new ethers_1.default.Contract("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", faucet_1.faucetABI, new ethers_1.default.Wallet(process.env.PRIVATE_KEY || "", new ethers_1.default.JsonRpcProvider((yield (0, getProviderUrl_1.getProviderURLs)(chain)) || "")));
         const ts = yield contractInst.nextClaimTimeInSeconds(userAddress);
         return ts;
     }

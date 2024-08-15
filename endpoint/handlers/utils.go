@@ -178,10 +178,10 @@ func PrepareTransaction(publicKey common.Address, privateKey *ecdsa.PrivateKey) 
 	return auth
 }
 
-func GetNetworksArray() [5]string {
-    return [5]string{"amoy", "bscTestnet", "fuji", "arbSepolia", "baseSepolia"/*, "beraTestnet","coreTestnet"*/}
+func GetNetworksArray() [6]string {
+    return [6]string{"amoy", "bscTestnet", "fuji", "arbSepolia", "baseSepolia", "beraTestnet"/*,"coreTestnet"*/}
 }
 
-func GetChainIds() [5] string{
-	return [5]string{"1","2","3","4","5"}
+func GetChainIds() [6] string{
+	return [6]string{"1","2","3","4","5","6"}
 }

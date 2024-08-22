@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"math/big"
 	"net/http"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -53,7 +54,9 @@ func GetLocalStakedBuds() gin.HandlerFunc {
 				return
 			}
 
-			localStakedBuds[network] = buds.String()
+			budsParsed := buds.Div(buds,big.NewInt(1000000000000000000))
+
+			localStakedBuds[network] = budsParsed.String()
 		}
 
 		c.JSON(http.StatusOK, localStakedBuds)

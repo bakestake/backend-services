@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/big"
 	"net/http"
+	"strconv"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -13,24 +14,15 @@ import (
 	CC "endpoints/CC_artifact"
 )
 
-type CCTX_Payload struct {
-	BudsAmount string       `json:"budsAmount"`
-	TokenID    string       `json:"tokenId"`
-	Address    string       `json:"userAddress"`
-	DestEid    uint32       `json:"destEid"`
-}
 
 func GetCctxFees() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var payload CCTX_Payload
 
 		network := c.Param("networkName")
-
-		if err := c.ShouldBindJSON(&payload); err != nil {
-			fmt.Println("Error: invalid request payload")
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-			return
-		}
+		budsAmount := c.Param("budsAmount")
+		tokenID := c.Param("tokenId")
+		userAddress := c.Param("userAddress")
+		destEid := c.Param("destEid")
 
 		url, err := GetNetworkRpc(network)
 		if err != nil {
@@ -54,21 +46,29 @@ func GetCctxFees() gin.HandlerFunc {
 			return
 		}
 
-		budsAmount := new(big.Int)
-		tokenID := new(big.Int)
+		buds := new(big.Int)
+		token := new(big.Int)
 
-		budsAmount.SetString(payload.BudsAmount, 10)
-		tokenID.SetString(payload.TokenID, 10)
-		address := common.HexToAddress(payload.Address)
+		buds.SetString(budsAmount, 10)
+		token.SetString(tokenID, 10)
+
+		destinationEid , err := strconv.ParseInt(destEid,10, 32)
+
+		if err !=  nil{
+			fmt.Println("error converting destId to uint32")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "error converting destId to uint32"})
+			return
+		}
 
 		fmt.Println("Calling GetCctxFees with parameters:")
-		fmt.Printf("DestEid: %d, BudsAmount: %s, TokenID: %s, Address: %s\n", payload.DestEid, budsAmount.String(), tokenID.String(), address.Hex())
+		fmt.Printf("DestEid: %d, BudsAmount: %s, TokenID: %s, Address: %s\n", uint32(destinationEid), buds, token, common.HexToAddress(userAddress))
 
 		opts := &bind.CallOpts{
 			Pending:     true,
 		}
 
-		res, err := instance.GetCctxFees(opts, payload.DestEid, budsAmount, tokenID, address)
+		res, err := instance.GetCctxFees(opts, uint32(destinationEid) , buds, token, common.HexToAddress(userAddress))
+
 		if err != nil {
 			fmt.Println("error getting response from contract:", err.Error())
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "error getting response from contract", "details": err.Error()})

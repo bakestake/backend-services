@@ -79,7 +79,7 @@ func main() {
 	router.GET("/getLocalBudsCount", handlers.GetLocalStakedBuds())
 	router.GET("/getStakersCount", handlers.GetNumberOfStakers())
 	router.GET("/getRewards/:address", handlers.GetStakingRewardsForUserHandler())
-	router.GET("/getFees/:networkName", handlers.GetCctxFees())
+	router.GET("/getFees/:networkName/:budsAmount/:tokenId/:userAddress/:destEid", handlers.GetCctxFees())
 	router.GET("/getRaidFees/:networkName", handlers.GetRaidFees())
 	router.GET("/getBudsBalance/:networkName/:address")
 	router.GET("/getCurrentBlockNumber/:networkName", handlers.GetBlockNumber())

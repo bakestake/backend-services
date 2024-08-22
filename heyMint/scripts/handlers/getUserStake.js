@@ -24,8 +24,8 @@ const getUserStake = (chain, userAddress) => __awaiter(void 0, void 0, void 0, f
         const contractInst = new ethers_1.ethers.Contract("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", getterSetter_1.getterSetter, wallet);
         const stakes = yield contractInst.getUserStakes(userAddress);
         let stakedAmount = BigInt(0);
-        for (let i = 0; i < stakes.length; i++) {
-            stakedAmount += BigInt(stakes[i].budsAmount);
+        for (let i = 0; i < stakes[0].length; i++) {
+            stakedAmount += BigInt(stakes[0][i].budsAmount);
         }
         return Number(stakedAmount) / 1e18; // Convert BigInt to Number
     }

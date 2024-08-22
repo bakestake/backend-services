@@ -61,7 +61,7 @@ const BeraStateUpdate = () => __awaiter(void 0, void 0, void 0, function* () {
     }
     console.log(globalBudsCount);
     console.log("updating bera state");
-    const setterInst = new ethers_1.ethers.Contract("0x054e0D70FfaefE4d7329B5077B4EcdE8062bfc08", setter_1.ABI, new ethers_1.ethers.Wallet(process.env.STATE_PRIVATE_KEY || "", new ethers_1.ethers.JsonRpcProvider((0, getProviderUrl_1.getProviderURLs)("beraTestnet") || "")));
+    const setterInst = new ethers_1.ethers.Contract("0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", setter_1.ABI, new ethers_1.ethers.Wallet(process.env.STATE_PRIVATE_KEY || "", new ethers_1.ethers.JsonRpcProvider((0, getProviderUrl_1.getProviderURLs)("beraTestnet") || "")));
     console.log("doing tx");
     const tx = yield setterInst.setGlobalStakedBuds(globalBudsCount);
     yield tx.wait();

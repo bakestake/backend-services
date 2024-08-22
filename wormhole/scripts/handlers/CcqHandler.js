@@ -45,7 +45,6 @@ const stateUpdate = (chain) => __awaiter(void 0, void 0, void 0, function* () {
             // { chains: "coreTestnet", chainId: 4, rpc: getProviderURLs("coreTestnet") },
             { chains: "baseSepolia", chainId: 10004, rpc: (0, getProviderUrl_1.getProviderURLs)("baseSepolia") },
         ];
-        console.log(process.env.RPC_URL_FUJI);
         console.log("Eth calls and block number calls getting recorded");
         const responses = yield Promise.all(chains.map(({ rpc, chainId }) => rpc
             ? axios_1.default

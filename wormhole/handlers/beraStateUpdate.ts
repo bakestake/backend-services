@@ -61,7 +61,7 @@ export const BeraStateUpdate = async() => {
     console.log("updating bera state")
 
     const setterInst = new ethers.Contract(
-        "0x054e0D70FfaefE4d7329B5077B4EcdE8062bfc08", 
+        "0xB2A338Fb022365Aa40a2c7ADA3Bbf1Ae001D6dbe", 
         ABI,
         new ethers.Wallet(process.env.STATE_PRIVATE_KEY || "", new ethers.JsonRpcProvider(getProviderURLs("beraTestnet") || ""))
     );

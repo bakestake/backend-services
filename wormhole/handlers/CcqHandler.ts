@@ -43,8 +43,6 @@ const stateUpdate = async(chain:string) =>{
       { chains: "baseSepolia", chainId: 10004, rpc: getProviderURLs("baseSepolia") },
     ];
 
-    console.log(process.env.RPC_URL_FUJI)
-
     console.log("Eth calls and block number calls getting recorded");
 
     const responses = await Promise.all(

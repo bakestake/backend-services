@@ -21,8 +21,8 @@ export const getUserStake = async (chain: string, userAddress: string): Promise<
     const stakes = await contractInst.getUserStakes(userAddress);
     let stakedAmount = BigInt(0);
 
-    for (let i = 0; i < stakes.length; i++) {
-      stakedAmount += BigInt(stakes[i].budsAmount);
+    for (let i = 0; i < stakes[0].length; i++) {
+      stakedAmount += BigInt(stakes[0][i].budsAmount);
     }
 
     return Number(stakedAmount)/1e18; // Convert BigInt to Number

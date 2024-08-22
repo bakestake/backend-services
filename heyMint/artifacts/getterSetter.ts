@@ -153,6 +153,11 @@ export const getterSetter = [
           "internalType": "struct LibGlobalVarState.Stake[]",
           "name": "",
           "type": "tuple[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
         }
       ],
       "stateMutability": "view",
@@ -219,6 +224,19 @@ export const getterSetter = [
         }
       ],
       "name": "setRaidHandler",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_address",
+          "type": "address"
+        }
+      ],
+      "name": "setSupraAddress",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

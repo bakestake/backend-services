@@ -14,6 +14,19 @@ import (
 )
 
 func InitiateDBWithData(db *sql.DB) error {
+	// Check if data already exists in the `daily_stats` table
+	var count int
+	err := db.QueryRow("SELECT COUNT(*) FROM daily_stats").Scan(&count)
+	if err != nil {
+		return fmt.Errorf("failed to check existing data: %v", err)
+	}
+
+	// If there's data, skip the insertion
+	if count > 0 {
+		fmt.Println("Database already contains initial data. Skipping initiation.")
+		return nil
+	}
+
 	// SQL statements to insert initial data
 	statements := []string{
 		`INSERT INTO daily_stats (chain_id, name, staked_buds, lost_buds) VALUES
@@ -39,6 +52,7 @@ func InitiateDBWithData(db *sql.DB) error {
 	fmt.Println("Database initiated successfully with initial data.")
 	return nil
 }
+
 
 func main() {
 	// cwd, err := os.Getwd()
@@ -83,7 +97,7 @@ func main() {
 	router.GET("/getRaidFees/:networkName", handlers.GetRaidFees())
 	router.GET("/getBudsBalance/:networkName/:address")
 	router.GET("/getCurrentBlockNumber/:networkName", handlers.GetBlockNumber())
-	router.GET("/getEvents/:networkName/:event", handlers.GetEventConfirmation())
+	// router.GET("/getEvents/:networkName/:event", handlers.GetEventConfirmation())
 	router.GET("/mostBaked", handlers.GetMostStaked(db))
 	router.GET("/mostRekt", handlers.GetMostRaided(db))
 	router.GET("/getUserStake/:network/:address", handlers.GetUserStake())

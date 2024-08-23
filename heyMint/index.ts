@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import { getUserStake } from "./handlers/getUserStake";
 import { getClaimTS } from "./handlers/getClaimTs";
 import { getLatestStakeTS } from "./handlers/getLatestStakeTS";
+import { getLastEvent } from "./handlers/getStakeConfirmation";
 
 const app = express();
 
@@ -60,5 +61,17 @@ app.get("/nextClaim/:network/:address", async (req, res) => {
     res.status(500).json({ error: `Failed to query ${req.params.network}: ${error}` });
   }
 });
+
+app.get("/getEventConfirmation/:network/:event/:startblock/:user", async (req, res) => {
+  try{
+    console.log("Querying event occurance")
+    const response = await getLastEvent(req.params.network, req.params.event, req.params.startblock, req.params.user);
+    console.log("Queried event occurance")
+    res.status(200).json(response);
+  }catch(error){
+    console.error("Error getting event confirmation:", error);
+    res.status(500).json({ error: `Failed to query event confirmation: ${error}` });
+  }
+})
 
 export default app;

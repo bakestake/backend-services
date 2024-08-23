@@ -18,6 +18,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const getUserStake_1 = require("./handlers/getUserStake");
 const getClaimTs_1 = require("./handlers/getClaimTs");
 const getLatestStakeTS_1 = require("./handlers/getLatestStakeTS");
+const getStakeConfirmation_1 = require("./handlers/getStakeConfirmation");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 var corsOptions = {
@@ -64,6 +65,18 @@ app.get("/nextClaim/:network/:address", (req, res) => __awaiter(void 0, void 0, 
     catch (error) {
         console.error("Error querying getClaimTS:", error);
         res.status(500).json({ error: `Failed to query ${req.params.network}: ${error}` });
+    }
+}));
+app.get("/getEventConfirmation/:network/:event/:startblock/:user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("Querying event occurance");
+        const response = yield (0, getStakeConfirmation_1.getLastEvent)(req.params.network, req.params.event, req.params.startblock, req.params.user);
+        console.log("Queried event occurance");
+        res.status(200).json(response);
+    }
+    catch (error) {
+        console.error("Error getting event confirmation:", error);
+        res.status(500).json({ error: `Failed to query event confirmation: ${error}` });
     }
 }));
 exports.default = app;

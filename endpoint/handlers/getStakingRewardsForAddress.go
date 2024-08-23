@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"math/big"
 	"net/http"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
@@ -18,9 +19,7 @@ func GetStakingRewardsForUserHandler() gin.HandlerFunc{
 
 		userAddressString := c.Param("address")
 
-		userAddressbytes := []byte(userAddressString)
-
-		userAddress := common.BytesToAddress(userAddressbytes)
+		userAddress := common.HexToAddress(userAddressString)
 
 		var networks = GetNetworksArray();
 
@@ -52,15 +51,18 @@ func GetStakingRewardsForUserHandler() gin.HandlerFunc{
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error creating contract instance"})
 				return
 			}
+			fmt.Println("response for address : ", userAddress)
 
-			res, err3 := instance.GetRewardsForUser(&bind.CallOpts{}, userAddress)
+			res, err3 := instance.GetRewardsForUser(&bind.CallOpts{},userAddress)
+
+			fmt.Println("response from contract : ", res)
 
 			if err3 != nil {
 				fmt.Println("error getting response from contract : ", err3.Error())
 				c.JSON(http.StatusInternalServerError, gin.H{"error": "error  getting response from contract"})
 				return
 			}else{
-				stakers[i] = res.String();
+				stakers[i]  = res.Div(res,big.NewInt(1e18)).String()
 			}
 		}
 

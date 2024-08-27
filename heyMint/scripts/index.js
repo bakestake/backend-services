@@ -18,7 +18,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const getUserStake_1 = require("./handlers/getUserStake");
 const getClaimTs_1 = require("./handlers/getClaimTs");
 const getLatestStakeTS_1 = require("./handlers/getLatestStakeTS");
-const getStakeConfirmation_1 = require("./handlers/getStakeConfirmation");
+const setUserId_1 = require("./handlers/setUserId");
+const getUserId_1 = require("./handlers/getUserId");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 var corsOptions = {
@@ -26,10 +27,14 @@ var corsOptions = {
     optionsSuccessStatus: 200,
 };
 app.use((0, cors_1.default)(corsOptions));
+app.use(function (req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    next();
+});
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("hey mint service");
 }));
-app.get("/getUserStake/:network/:address", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/getUserStake/:network/:address", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Querying getUserStake for network: ${req.params.network}, address: ${req.params.address}`);
         console.log(req.params.network, req.params.address);
@@ -42,7 +47,7 @@ app.get("/getUserStake/:network/:address", (req, res) => __awaiter(void 0, void 
         res.status(500).json({ error: `Failed to perform CCQ: ${error}` });
     }
 }));
-app.get("/getLatestStakeTs/:network/:address", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/getLatestStakeTs/:network/:address", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Querying getUserStake for network: ${req.params.network}, address: ${req.params.address}`);
         console.log(req.params.network, req.params.address);
@@ -55,7 +60,7 @@ app.get("/getLatestStakeTs/:network/:address", (req, res) => __awaiter(void 0, v
         res.status(500).json({ error: `Failed to perform CCQ: ${error}` });
     }
 }));
-app.get("/nextClaim/:network/:address", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/nextClaim/:network/:address", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Querying getClaimTS for network: ${req.params.network}, address: ${req.params.address}`);
         const response = yield (0, getClaimTs_1.getClaimTS)(req.params.network, req.params.address);
@@ -67,16 +72,28 @@ app.get("/nextClaim/:network/:address", (req, res) => __awaiter(void 0, void 0, 
         res.status(500).json({ error: `Failed to query ${req.params.network}: ${error}` });
     }
 }));
-app.get("/getEventConfirmation/:network/:event/:startblock/:user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/getHeymMintID/:address", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("Querying event occurance");
-        const response = yield (0, getStakeConfirmation_1.getLastEvent)(req.params.network, req.params.event, req.params.startblock, req.params.user);
-        console.log("Queried event occurance");
+        console.log(`Querying heymint id`);
+        const response = yield (0, getUserId_1.readHeymintId)(req.params.address);
+        console.log(`Queried heymint id successfully.`);
         res.status(200).json(response);
     }
     catch (error) {
-        console.error("Error getting event confirmation:", error);
-        res.status(500).json({ error: `Failed to query event confirmation: ${error}` });
+        console.error("Error querying heymint id:", error);
+        res.status(500).json({ error: `Failed to query heymint id : ${error}` });
+    }
+}));
+app.post("/setHeyMintID/:address/:id", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log(`setting heymint id`);
+        const response = yield (0, setUserId_1.writeToDb)(req.params.address, req.params.id);
+        console.log(`successfully set heymint id for ${req.params.address}`);
+        res.status(200).json(response);
+    }
+    catch (error) {
+        console.error("Error setting heymint id:", error);
+        res.status(500).json({ error: `Failed to set heymint id : ${error}` });
     }
 }));
 exports.default = app;

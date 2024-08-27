@@ -164,15 +164,111 @@ url : http://13.39.24.134:3000/
     }
   ```
 
-## cross chain transaction status 
-http://13.39.24.134:4000/getStatus/:param1/param2
-  param1 :- chain name
-  param2 :- source tx id
+## transaction confirmation
+url - http://13.39.24.134:4000/
 
-returns status as - 
-  1. Delivered [success]
-  2. Failed || Blocked - [failed]
-  3. Inflight - [Yet not received on destination chain]
+1. Cross chain tx monitoring
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+2. Stake tx confirmation
+- **url** - http://13.39.24.134:4000/getStatus/stake/:chain/:startblock/:user
+- **param1** :- chain name
+- **param2** :- latest block number
+- **param3** :- user address
+- **response** -
+  ```json
+    { 
+      "eventOccurred": boolean, 
+      "amount": string
+    }
+  ```
+
+3. Raid tx confirmation
+- **url** - http://13.39.24.134:4000/getStatus/raid/:chain/:startblock/:user
+- **param1** :- chain name
+- **param2** :- latest block number
+- **param3** :- user address
+- **response** -
+  ```json
+    { 
+      "eventOccurred": boolean, 
+      "isSuccess": boolean
+    }
+  ```
+
+4. Claim tx confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+5. Unstake tx confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+6. Buds claim confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+7. Farmer claim confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+8. Narc claim confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
+
+9. Buds burn confirmation
+- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **param1** :- chain name
+- **param2** :- source tx id
+- **response** -
+  ```json
+    {
+      "tx_completed" : true
+    }
+  ```
 
 ## Heymint 
 url - http://13.39.24.134:6000/

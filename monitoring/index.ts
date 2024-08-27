@@ -19,6 +19,11 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
+
 app.get("/", cors(), async (req, res) => {
   res.send("lz status service");
 });

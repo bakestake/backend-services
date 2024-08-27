@@ -46,7 +46,8 @@ const getLastStakeEvent = (chain, startBlock, userAddress) => __awaiter(void 0, 
             if (data2[i].sender == userAddress) {
                 console.log("data[i] in events", data2[i]);
                 console.log("true");
-                return { eventOccurred: true, amount: data2[i].amount };
+                const amount = data2[i].amount;
+                return { eventOccurred: true, amount: amount.toString() };
             }
         }
         console.log("false");

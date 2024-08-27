@@ -18,11 +18,16 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  next()
+})
+
 app.get("/", async (req, res) => {
   res.send("hey mint service");
 });
 
-app.get("/getUserStake/:network/:address", async (req, res) => {
+app.get("/getUserStake/:network/:address", cors(), async (req, res) => {
   try {
     console.log(`Querying getUserStake for network: ${req.params.network}, address: ${req.params.address}`);
     console.log(req.params.network, req.params.address)
@@ -36,7 +41,7 @@ app.get("/getUserStake/:network/:address", async (req, res) => {
   }
 });
 
-app.get("/getLatestStakeTs/:network/:address", async (req, res) => {
+app.get("/getLatestStakeTs/:network/:address", cors(), async (req, res) => {
   try {
     console.log(`Querying getUserStake for network: ${req.params.network}, address: ${req.params.address}`);
     console.log(req.params.network, req.params.address)
@@ -50,7 +55,7 @@ app.get("/getLatestStakeTs/:network/:address", async (req, res) => {
   }
 });
 
-app.get("/nextClaim/:network/:address", async (req, res) => {
+app.get("/nextClaim/:network/:address", cors(), async (req, res) => {
   try {
     console.log(`Querying getClaimTS for network: ${req.params.network}, address: ${req.params.address}`);
     const response = await getClaimTS(req.params.network, req.params.address);
@@ -63,7 +68,7 @@ app.get("/nextClaim/:network/:address", async (req, res) => {
   }
 });
 
-app.get("/getHeymMintID/:address", async (req, res) => {
+app.get("/getHeymMintID/:address", cors(), async (req, res) => {
   try {
     console.log(`Querying heymint id`);
     const response = await readHeymintId(req.params.address);
@@ -76,7 +81,7 @@ app.get("/getHeymMintID/:address", async (req, res) => {
   }
 });
 
-app.post("/setHeyMintID/:address/:id", async (req, res) => {
+app.post("/setHeyMintID/:address/:id", cors(),  async (req, res) => {
   try {
     console.log(`setting heymint id`);
     const response = await writeToDb(req.params.address, req.params.id);

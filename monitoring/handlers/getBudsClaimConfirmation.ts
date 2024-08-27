@@ -24,7 +24,7 @@ export const getBudsClaimConfirmation = async (chain:string, userAddress:string)
 
     const claimTs = await contract.nextClaimTimeInSeconds(userAddress);
 
-    if(latestBlockNumber < claimTs){
+    if(claimTs != 0){
         return true;
     }
 

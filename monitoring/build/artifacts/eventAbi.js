@@ -184,7 +184,7 @@ exports.eventAbi = [{
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "address",
                 "name": "owner",
                 "type": "address"

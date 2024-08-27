@@ -28,7 +28,7 @@ const getLastUnstakeEvent = (chain, startBlock, userAddress) => __awaiter(void 0
         const latestBlockNumber = yield provider.getBlockNumber();
         console.log("latest block", latestBlockNumber);
         var data2 = [];
-        var filter = contract.filters.UnStaked(null, null, null, null, null, null);
+        var filter = contract.filters.UnStaked(userAddress, null, null, null, null, null);
         console.log("filter", filter);
         data2 = yield contract.queryFilter(filter, Number(startBlock), latestBlockNumber);
         console.log("data 2 filter :", data2);

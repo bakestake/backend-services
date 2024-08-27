@@ -31,7 +31,7 @@ export const getBurnConfirmation = async (chain:string, startBlock:string, userA
     data2 = await contract.queryFilter(
         filter,
         Number(startBlock),
-        latestBlockNumber
+        parseInt(startBlock)+20
     );
 
     // Decode event data
@@ -51,7 +51,8 @@ export const getBurnConfirmation = async (chain:string, startBlock:string, userA
     for (let i = 0; i < data2.length; i++) {
     if (data2[i].user == userAddress) {
         console.log("true");
-        return { boosterMinted: data2[i].booster, tokenId: data2[i].tokenId };
+        const tokenID = data2[i].tokenId
+        return { boosterMinted: data2[i].booster, tokenId: tokenID.toString()};
     }
     }
     

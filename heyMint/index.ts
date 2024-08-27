@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 import { getUserStake } from "./handlers/getUserStake";
 import { getClaimTS } from "./handlers/getClaimTs";
 import { getLatestStakeTS } from "./handlers/getLatestStakeTS";
+import { writeToDb } from "./handlers/setUserId";
+import { readHeymintId } from "./handlers/getUserId";
 
 const app = express();
 
@@ -60,6 +62,33 @@ app.get("/nextClaim/:network/:address", async (req, res) => {
     res.status(500).json({ error: `Failed to query ${req.params.network}: ${error}` });
   }
 });
+
+app.get("/getHeymMintID/:address", async (req, res) => {
+  try {
+    console.log(`Querying heymint id`);
+    const response = await readHeymintId(req.params.address);
+    console.log(`Queried heymint id successfully.`);
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error querying heymint id:", error);
+    res.status(500).json({ error: `Failed to query heymint id : ${error}` });
+  }
+});
+
+app.post("/setHeyMintID/:address/:id", async (req, res) => {
+  try {
+    console.log(`setting heymint id`);
+    const response = await writeToDb(req.params.address, req.params.id);
+    console.log(`successfully set heymint id for ${req.params.address}`);
+
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error setting heymint id:", error);
+    res.status(500).json({ error: `Failed to set heymint id : ${error}` });
+  }
+});
+
 
 
 export default app;

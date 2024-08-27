@@ -30,7 +30,7 @@ const getBurnConfirmation = (chain, startBlock, userAddress) => __awaiter(void 0
         var data2 = [];
         var filter = contract.filters.Burned(null, null, null);
         console.log(filter);
-        data2 = yield contract.queryFilter(filter, Number(startBlock), latestBlockNumber);
+        data2 = yield contract.queryFilter(filter, Number(startBlock), parseInt(startBlock) + 20);
         // Decode event data
         data2 = data2.map((el) => {
             const decodedEvent = contract.interface.decodeEventLog("Burned", el.data, el.topics);
@@ -46,7 +46,8 @@ const getBurnConfirmation = (chain, startBlock, userAddress) => __awaiter(void 0
         for (let i = 0; i < data2.length; i++) {
             if (data2[i].user == userAddress) {
                 console.log("true");
-                return { boosterMinted: data2[i].booster, tokenId: data2[i].tokenId };
+                const tokenID = data2[i].tokenId;
+                return { boosterMinted: data2[i].booster, tokenId: tokenID.toString() };
             }
         }
         return { boosterMinted: "", tokenId: 0 };

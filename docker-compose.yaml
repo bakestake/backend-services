@@ -59,6 +59,8 @@ services:
     volumes:
       - ./.env:/usr/src/app/.env
     restart: always
+    depends_on:
+      - postgres
     networks: 
      - bakeland
 

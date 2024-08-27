@@ -53,7 +53,9 @@ export const getLastUnstakeEvent = async (chain:string, startBlock:string, userA
       if (data2[i].sender == userAddress) {
         console.log("data[i] in events", data2[i]);
         console.log("true");
-        return { eventOccurred: true, amount: data2[i].amount, tokenId: data2[i].tokenId };
+        const amount = data2[i].amount
+        const token = data2[i].tokenId
+        return { eventOccurred: true, amount: amount.toString(), tokenId: token.toString()};
       }
     }
 

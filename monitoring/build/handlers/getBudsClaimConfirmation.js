@@ -28,7 +28,7 @@ const getBudsClaimConfirmation = (chain, userAddress) => __awaiter(void 0, void 
         const latestBlockNumber = yield provider.getBlockNumber();
         console.log("latest block", latestBlockNumber);
         const claimTs = yield contract.nextClaimTimeInSeconds(userAddress);
-        if (latestBlockNumber < claimTs) {
+        if (claimTs != 0) {
             return true;
         }
         return false;

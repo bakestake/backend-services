@@ -205,68 +205,75 @@ url - http://13.39.24.134:4000/
   ```
 
 4. Claim tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/rewardClaim/:chain/:startblock/:user
 - **param1** :- chain name
-- **param2** :- source tx id
+- **param2** :- latest block number
+- **param3** :- user address
 - **response** -
   ```json
     {
-      "tx_completed" : true
+      eventOccurred: boolean, 
+      amount: uint
     }
   ```
 
 5. Unstake tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/unstake/:chain/:startblock/:user
 - **param1** :- chain name
-- **param2** :- source tx id
+- **param2** :- latest block number
+- **param3** :- user address
 - **response** -
   ```json
-    {
-      "tx_completed" : true
+    { 
+      eventOccurred: boolean, 
+      amount: uint, 
+      tokenId:uint
     }
   ```
 
 6. Buds claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/budsClaim/:chain/:user
 - **param1** :- chain name
-- **param2** :- source tx id
+- **param2** :- user address
 - **response** -
   ```json
     {
-      "tx_completed" : true
+      boolean [true(complete) or false(not found)]
     }
   ```
 
 7. Farmer claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/farmerClaim/:chain/:user
 - **param1** :- chain name
-- **param2** :- source tx id
+- **param2** :- user address
 - **response** -
   ```json
     {
-      "tx_completed" : true
+      boolean [true(complete) or false(not found)]
     }
   ```
 
 8. Narc claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/narcClaim/:chain/:user
 - **param1** :- chain name
 - **param2** :- source tx id
 - **response** -
   ```json
     {
-      "tx_completed" : true
+      boolean [true(complete) or false(not found)]
     }
   ```
 
 9. Buds burn confirmation
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - http://13.39.24.134:4000/getStatus/burn/:chain/:startblock/:user
 - **param1** :- chain name
-- **param2** :- source tx id
+- **param2** :- latest block number
+- **param3** :- user address
 - **response** -
   ```json
     {
-      "tx_completed" : true
+      boosterMinted: [string] name of NFT minted [stoner or informat],
+      tokenId: token id minted [uint]
     }
   ```
 

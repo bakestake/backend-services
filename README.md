@@ -166,13 +166,13 @@ url : http://13.39.24.134:3000/
 
 ## cross chain transaction status 
 http://13.39.24.134:4000/getStatus/:param1/param2
-param1 :- chain name
-param2 :- source tx id
+  param1 :- chain name
+  param2 :- source tx id
 
 returns status as - 
-Delivered [success]
-Failed || Blocked - [failed]
-Inflight - [Yet not received on destination chain]
+  1. Delivered [success]
+  2. Failed || Blocked - [failed]
+  3. Inflight - [Yet not received on destination chain]
 
 ## Heymint 
 url - http://13.39.24.134:6000/

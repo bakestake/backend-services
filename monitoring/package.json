@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc",
     "start": "node build/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,8 +13,12 @@
   "license": "ISC",
   "dependencies": {
     "@layerzerolabs/scan-client": "^0.0.8",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ethers": "^6.13.1",
     "express": "^4.19.2",
-    "typescript": "^5.5.3"
+    "tsc": "^2.0.4",
+    "typescript": "^5.5.4"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

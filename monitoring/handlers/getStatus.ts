@@ -1,16 +1,17 @@
-import {getMessagesBySrcTxHash} from '@layerzerolabs/scan-client';
-import { getChainId } from './utils/getChainId';
+import {createClient} from '@layerzerolabs/scan-client';
+
 
 export const getStatus = async(chain:string, txHash : string) => {
 
-    const srcId = await getChainId(chain)
+    // Initialize a client with the desired environment
+    const client = createClient('testnet');
 
-    const msg  = await getMessagesBySrcTxHash(
-        srcId,
-        txHash,
+    // Get a list of messages by transaction hash
+    const {messages} = await client.getMessagesBySrcTxHash(
+        txHash
     );
 
-    const status = msg.messages[0].status
+    console.log(messages)
 
-    return status;
+    return messages;
 }

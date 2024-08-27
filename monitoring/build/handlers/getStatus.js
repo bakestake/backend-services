@@ -11,11 +11,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getStatus = void 0;
 const scan_client_1 = require("@layerzerolabs/scan-client");
-const getChainId_1 = require("./utils/getChainId");
 const getStatus = (chain, txHash) => __awaiter(void 0, void 0, void 0, function* () {
-    const srcId = yield (0, getChainId_1.getChainId)(chain);
-    const msg = yield (0, scan_client_1.getMessagesBySrcTxHash)(srcId, txHash);
-    const status = msg.messages[0].status;
-    return status;
+    // Initialize a client with the desired environment
+    const client = (0, scan_client_1.createClient)('testnet');
+    // Get a list of messages by transaction hash
+    const { messages } = yield client.getMessagesBySrcTxHash(txHash);
+    console.log(messages);
+    return messages;
 });
 exports.getStatus = getStatus;

@@ -11,3 +11,8 @@ CREATE TABLE user_data (
     buds_won BIGINT,
     games_won BIGINT
 );
+
+CREATE TABLE user_data (
+    user_address VARCHAR(255) NOT NULL PRIMARY KEY,
+    heymint_id VARCHAR(255) UNIQUE NOT NULL,
+);

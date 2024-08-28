@@ -1,4 +1,4 @@
-  url - http://13.39.24.134:8000/
+  url - http://35.180.118.106:8000/
 ### 1. Home
 
 - **Endpoint:** `GET /`
@@ -150,7 +150,7 @@
   ```
 
 ## Wormhole
-url : http://13.39.24.134:3000/
+url : http://35.180.118.106:3000/
 ### 1. update liqduity
 
 - **Endpoint:** `GET /updateGlobalLiquidity`
@@ -165,10 +165,10 @@ url : http://13.39.24.134:3000/
   ```
 
 ## transaction confirmation
-url - http://13.39.24.134:4000/
+url - http://35.180.118.106:4000/
 
 1. Cross chain tx monitoring
-- **url** - http://13.39.24.134:4000/getStatus/:param1/param2
+- **url** - getStatus/:param1/param2
 - **param1** :- chain name
 - **param2** :- source tx id
 - **response** -
@@ -179,7 +179,7 @@ url - http://13.39.24.134:4000/
   ```
 
 2. Stake tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/stake/:chain/:startblock/:user
+- **url** - /getStatus/stake/:chain/:startblock/:user
 - **param1** :- chain name
 - **param2** :- latest block number
 - **param3** :- user address
@@ -192,7 +192,7 @@ url - http://13.39.24.134:4000/
   ```
 
 3. Raid tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/raid/:chain/:startblock/:user
+- **url** - /getStatus/raid/:chain/:startblock/:user
 - **param1** :- chain name
 - **param2** :- latest block number
 - **param3** :- user address
@@ -205,7 +205,7 @@ url - http://13.39.24.134:4000/
   ```
 
 4. Claim tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/rewardClaim/:chain/:startblock/:user
+- **url** - getStatus/rewardClaim/:chain/:startblock/:user
 - **param1** :- chain name
 - **param2** :- latest block number
 - **param3** :- user address
@@ -218,7 +218,7 @@ url - http://13.39.24.134:4000/
   ```
 
 5. Unstake tx confirmation
-- **url** - http://13.39.24.134:4000/getStatus/unstake/:chain/:startblock/:user
+- **url** - /getStatus/unstake/:chain/:startblock/:user
 - **param1** :- chain name
 - **param2** :- latest block number
 - **param3** :- user address
@@ -232,7 +232,7 @@ url - http://13.39.24.134:4000/
   ```
 
 6. Buds claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/budsClaim/:chain/:user
+- **url** - /getStatus/budsClaim/:chain/:user
 - **param1** :- chain name
 - **param2** :- user address
 - **response** -
@@ -243,7 +243,7 @@ url - http://13.39.24.134:4000/
   ```
 
 7. Farmer claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/farmerClaim/:chain/:user
+- **url** -/getStatus/farmerClaim/:chain/:user
 - **param1** :- chain name
 - **param2** :- user address
 - **response** -
@@ -254,7 +254,7 @@ url - http://13.39.24.134:4000/
   ```
 
 8. Narc claim confirmation
-- **url** - http://13.39.24.134:4000/getStatus/narcClaim/:chain/:user
+- **url** - /getStatus/narcClaim/:chain/:user
 - **param1** :- chain name
 - **param2** :- source tx id
 - **response** -
@@ -265,7 +265,7 @@ url - http://13.39.24.134:4000/
   ```
 
 9. Buds burn confirmation
-- **url** - http://13.39.24.134:4000/getStatus/burn/:chain/:startblock/:user
+- **url** - /getStatus/burn/:chain/:startblock/:user
 - **param1** :- chain name
 - **param2** :- latest block number
 - **param3** :- user address
@@ -278,7 +278,7 @@ url - http://13.39.24.134:4000/
   ```
 
 ## Heymint 
-url - http://13.39.24.134:6000/
+url - http://35.180.118.106:6000/
 
 ### 1. Get User staked buds
 - **Endpoint:** `GET /getUserStake/:network/:address`

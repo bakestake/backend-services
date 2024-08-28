@@ -1,8 +1,7 @@
-import { createDbClient } from "./setUserId";
+import { Pool } from "pg";
 
 // Function to read heymint_id for a particular address
-export async function readHeymintId(userAddress: string): Promise<string | null> {
-    const client = createDbClient();
+export async function readHeymintId(userAddress: string, client: Pool): Promise<string | null> {
     try {
         await client.connect();
         const query = `
@@ -17,7 +16,7 @@ export async function readHeymintId(userAddress: string): Promise<string | null>
         }
     } catch (error) {
         console.error('Error reading from the database:', error);
-        return null;
+        throw new Error(`Error writing to the database:', ${error}`)
     } finally {
         await client.end();
     }

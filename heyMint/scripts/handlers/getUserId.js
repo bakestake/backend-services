@@ -10,11 +10,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.readHeymintId = readHeymintId;
-const setUserId_1 = require("./setUserId");
 // Function to read heymint_id for a particular address
-function readHeymintId(userAddress) {
+function readHeymintId(userAddress, client) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = (0, setUserId_1.createDbClient)();
         try {
             yield client.connect();
             const query = `
@@ -31,7 +29,7 @@ function readHeymintId(userAddress) {
         }
         catch (error) {
             console.error('Error reading from the database:', error);
-            return null;
+            throw new Error(`Error writing to the database:', ${error}`);
         }
         finally {
             yield client.end();

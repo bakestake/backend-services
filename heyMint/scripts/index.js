@@ -20,6 +20,7 @@ const getClaimTs_1 = require("./handlers/getClaimTs");
 const getLatestStakeTS_1 = require("./handlers/getLatestStakeTS");
 const setUserId_1 = require("./handlers/setUserId");
 const getUserId_1 = require("./handlers/getUserId");
+const pg_1 = require("pg");
 const app = (0, express_1.default)();
 dotenv_1.default.config();
 var corsOptions = {
@@ -30,6 +31,14 @@ app.use((0, cors_1.default)(corsOptions));
 app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     next();
+});
+const pool = new pg_1.Pool({
+    host: 'localhost',
+    user: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    port: 5432,
+    idleTimeoutMillis: 30000,
 });
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("hey mint service");
@@ -75,7 +84,7 @@ app.get("/nextClaim/:network/:address", (0, cors_1.default)(), (req, res) => __a
 app.get("/getHeymMintID/:address", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`Querying heymint id`);
-        const response = yield (0, getUserId_1.readHeymintId)(req.params.address);
+        const response = yield (0, getUserId_1.readHeymintId)(req.params.address, pool);
         console.log(`Queried heymint id successfully.`);
         res.status(200).json(response);
     }
@@ -87,7 +96,7 @@ app.get("/getHeymMintID/:address", (0, cors_1.default)(), (req, res) => __awaite
 app.post("/setHeyMintID/:address/:id", (0, cors_1.default)(), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(`setting heymint id`);
-        const response = yield (0, setUserId_1.writeToDb)(req.params.address, req.params.id);
+        const response = yield (0, setUserId_1.writeToDb)(req.params.address, req.params.id, pool);
         console.log(`successfully set heymint id for ${req.params.address}`);
         res.status(200).json(response);
     }

@@ -12,40 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createDbClient = createDbClient;
 exports.writeToDb = writeToDb;
-const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-// Function to initialize and return a PostgreSQL client
-function createDbClient() {
-    return new pg_1.Client({
-        user: process.env.POSTGRES_USER,
-        host: process.env.POSTGRES_HOST,
-        database: process.env.POSTGRES_DB,
-        password: process.env.POSTGRES_PASSWORD,
-        port: 5000,
-    });
-}
 // Function to write data to the user_data table
-function writeToDb(userAddress, heymintId) {
+function writeToDb(address, id, pool) {
     return __awaiter(this, void 0, void 0, function* () {
-        const client = createDbClient();
+        const query = `INSERT INTO your_table (address, heymint_id) VALUES ($1, $2)`;
         try {
-            yield client.connect();
-            const query = `
-            INSERT INTO user_data (user_address, heymint_id)
-            VALUES ($1, $2)
-            ON CONFLICT (user_address) DO UPDATE SET heymint_id = EXCLUDED.heymint_id;
-        `;
-            yield client.query(query, [userAddress, heymintId]);
-            console.log(`Successfully wrote data for address: ${userAddress}`);
+            const client = yield pool.connect();
+            yield client.query(query, [address, id]);
+            client.release();
+            return { message: "Data inserted successfully" };
         }
         catch (error) {
-            console.error('Error writing to the database:', error);
-        }
-        finally {
-            yield client.end();
+            console.error("Error inserting data into the database:", error);
+            throw new Error("Failed to insert data");
         }
     });
 }

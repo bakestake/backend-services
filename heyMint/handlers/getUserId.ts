@@ -18,7 +18,7 @@ export async function readHeymintId(userAddress: string): Promise<string | null>
     } catch (error) {
         console.error('Error reading from the database:', error);
         return null;
-    } finally {
-        await client.end();
-    }
+    }// } finally {
+    //     await client.end();
+    // }
 }

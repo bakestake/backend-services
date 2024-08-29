@@ -62,7 +62,7 @@
 - **Description:** Retrieves the current Annual Percentage Rate for all networks.
 - **Response:**
   ```json
-  array with aprs for corresponding chains ["amoy":1000, "arbSepolia":6999, .....]
+  object with aprs for corresponding chains {"amoy":1000, "arbSepolia":6999, .....}
   ```
 
 ### 6. Get Local Buds Count
@@ -72,7 +72,7 @@
 - **Response:**
   ```json
   
-  array with local staked buds for corresponding chains ["amoy":1000, "arbSepolia":6999, .....]
+  object with local staked buds for corresponding chains {"amoy":1000, "arbSepolia":6999, .....}
   ```
 
 ### 7. Get Rewards

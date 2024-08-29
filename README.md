@@ -1,7 +1,7 @@
 
 ## Read APIs
 
-  url - http://35.180.118.106:8000/
+  url -  https://t8kmnpwzy5.execute-api.eu-west-3.amazonaws.com/dev/
 ### 1. Home
 
 - **Endpoint:** `GET /`
@@ -114,17 +114,10 @@
 
 ### 10. Get Fees
 
-- **Endpoint:** `GET /getFees/:networkName`
+- **Endpoint:** `GET /getFees/:networkName/:budsAmount/:tokenId/:userAddress/:destEID`
 - **Description:** Retrieves fees for a specific operation involving "Buds."
 - **Parameters:**
   - `networkName`: Chain name
-- **Request body**
-  - {
-      BudsAmount string       `json:"budsAmount"`
-      TokenID    string       `json:"tokenId"`
-      Address    string       `json:"userAddress"`
-      DestEid    uint32       `json:"destEid"`
-    }
 - **Response:**
   ```json
   {
@@ -168,8 +161,7 @@ url : http://35.180.118.106:3000/
   ```
 
 ## transaction confirmation
-url - http://35.180.118.106:4000/
-
+url -  https://iuss5miew4.execute-api.eu-west-3.amazonaws.com/dev/
 1. Cross chain tx monitoring
 - **url** - getStatus/:param1/param2
 - **param1** :- chain name
@@ -281,8 +273,7 @@ url - http://35.180.118.106:4000/
   ```
 
 ## Heymint 
-url - http://35.180.118.106:6000/
-
+url -  https://i5wylasq33.execute-api.eu-west-3.amazonaws.com/dev/
 ### 1. Get User staked buds
 - **Endpoint:** `GET /getUserStake/:network/:address`
 - **Description:** Returns buds staked by user on particular chain"

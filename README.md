@@ -146,20 +146,25 @@
   ```
 
 ## Wormhole
-url : http://35.180.118.106:3000/
+url :  https://24rya9omd6.execute-api.eu-west-3.amazonaws.com/dev/
 ### 1. update liqduity
 
-- **Endpoint:** `GET /updateGlobalLiquidity`
+- **Endpoint:** `GET /globalBudsCcq/:chain`
 - **Description:** returns ccq data acquired from ccq to all chain chains. this data should be submitted to updateState function in contract
-- header - API-KEY : B1q2a3z4w5s-A0p9lh-K5t6f7b-E4r5t6y
 - **Response:**
   ```json
     {
       "bytes" : bytes,
-      "sigs" : signatures
+      "sig" : signatures
     }
   ```
 
+### 2. destination chain update liquidity
+  - **Endpoint** :- /updateChainState/:chain
+  - **Response:**
+  ```json
+    no need to listen to response
+  ```
 ## transaction confirmation
 url -  https://iuss5miew4.execute-api.eu-west-3.amazonaws.com/dev/
 1. Cross chain tx monitoring
